@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Tune & Trace</h1>
+
+<h2>Artiesten</h2>
+@if (ViewBag.Artists != null && ViewBag.Artists.Count > 0)
+{
+    <ul>
+        @foreach (var artist in ViewBag.Artists)
+        {
+            <li>@artist.Naam</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Geen artiesten gevonden.</p>
+}
+
+<h2>Albums</h2>
+@if (ViewBag.Albums != null && ViewBag.Albums.Count > 0)
+{
+    <ul>
+        @foreach (var album in ViewBag.Albums)
+        {
+            <li>@album.Titel</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Geen albums gevonden.</p>
+}
+
+<h2>Nummers</h2>
+@if (ViewBag.Songs != null && ViewBag.Songs.Count > 0)
+{
+    <ul>
+        @foreach (var song in ViewBag.Songs)
+        {
+            <li>@song.Titel</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Geen nummers gevonden.</p>
+}

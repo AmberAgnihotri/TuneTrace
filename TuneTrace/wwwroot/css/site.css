@@ -1,0 +1,88 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 200px;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+    .sidebar h2 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .sidebar a {
+        display: block;
+        text-decoration: none;
+        color: #000;
+        margin-bottom: 12px;
+        font-size: 15px;
+    }
+
+        .sidebar a:hover {
+            font-weight: bold;
+        }
+
+    .sidebar .section-title {
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .sidebar ul {
+        list-style: disc;
+        padding-left: 20px;
+    }
+
+        .sidebar ul li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+.main-content {
+    margin-left: 200px;
+    padding: 30px;
+    width: 100%;
+}
