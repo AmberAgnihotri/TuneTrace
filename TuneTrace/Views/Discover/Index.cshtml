@@ -3,4 +3,77 @@
 }
 
 <h1>Discover</h1>
-<p>Zoekfunctie komt hier.</p>
+
+@if (TempData["Fout"] != null)
+{
+    <div class="alert alert-warning">@TempData["Fout"]</div>
+}
+
+<form method="post" asp-controller="Discover" asp-action="Zoek">
+    <div class="input-group mb-3">
+        <input type="text" name="zoekterm" class="form-control"
+               placeholder="Search for artists, albums or songs..."
+               value="@ViewBag.Zoekterm" minlength="2" required />
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
+    
+@if (ViewBag.RecenteZoekopdrachten != null && ViewBag.RecenteZoekopdrachten.Count > 0)
+{
+    <p>
+        <strong>Recent searches:</strong>
+        @foreach (var z in ViewBag.RecenteZoekopdrachten)
+        {
+            <a href="#" onclick="document.querySelector('input[name=zoekterm]').value='@z';document.querySelector('form').submit();">@z</a>
+    <span> </span>;
+        }
+    </p>
+}
+
+@if (ViewBag.Artiesten != null)
+{
+    <h4>Artists</h4>
+    @if (ViewBag.Artiesten.Count == 0)
+    {
+        <p>No artists found.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var a in ViewBag.Artiesten)
+            {
+                <li>@a.Naam</li>
+            }
+        </ul>
+    }
+
+    <h4>Albums</h4>
+    @if (ViewBag.Albums.Count == 0)
+    {
+        <p>No albums found.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var a in ViewBag.Albums)
+            {
+                <li>@a.Titel</li>
+            }
+        </ul>
+    }
+
+    <h4>Songs</h4>
+    @if (ViewBag.Songs.Count == 0)
+    {
+        <p>No songs found.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var s in ViewBag.Songs)
+            {
+                <li>@s.Titel</li>
+            }
+        </ul>
+    }
+}
