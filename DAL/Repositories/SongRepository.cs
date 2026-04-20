@@ -19,7 +19,8 @@ namespace DAL.Repositories
                    a.Title AS AlbumTitle, ar.Name AS ArtistName
             FROM Song s
             LEFT JOIN Album a ON s.album_id = a.id
-            LEFT JOIN Artist ar ON a.artist_id = ar.id";
+            LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
+            LEFT JOIN Artist ar ON aa.ArtistID = ar.id";
 
         public List<SongDto> GetSongs()
         {
@@ -57,9 +58,9 @@ namespace DAL.Repositories
             var songs = new List<SongDto>();
 
             using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery + " WHERE s.Title LIKE @query", conn);
-
+            using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
             cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+            cmd.Parameters.AddWithValue("@exactQuery", query);
 
             conn.Open();
             using var reader = cmd.ExecuteReader();

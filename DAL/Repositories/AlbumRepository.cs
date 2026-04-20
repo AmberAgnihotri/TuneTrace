@@ -93,9 +93,10 @@ namespace DAL.Repositories
                 FROM Album a
                 LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
                 LEFT JOIN Artist ar ON aa.ArtistID = ar.id
-                WHERE a.Title LIKE @query", conn);
-
+                WHERE a.Title LIKE @query 
+                OR SOUNDEX(a.Title) = SOUNDEX(@exactQuery)", conn);
             cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+            cmd.Parameters.AddWithValue("@exactQuery", query);
 
             conn.Open();
             using var reader = cmd.ExecuteReader();

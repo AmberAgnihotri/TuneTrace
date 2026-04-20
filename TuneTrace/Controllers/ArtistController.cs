@@ -22,7 +22,6 @@ namespace TuneTrace.Controllers
                 Name = a.Name,
                 Biography = a.Biography
             }).ToList();
-
             return View(viewModels);
         }
 
@@ -40,6 +39,13 @@ namespace TuneTrace.Controllers
                     Id = a.Id,
                     Title = a.Title,
                     ReleaseDate = a.ReleaseDate
+                }).ToList(),
+                Songs = artist.Songs.Select(s => new SongViewModel
+                {
+                    Id = s.Id,
+                    Title = s.Title,
+                    ReleaseDate = s.ReleaseDate,
+                    Duration = s.Duration
                 }).ToList()
             };
             return View(viewModel);
@@ -54,7 +60,6 @@ namespace TuneTrace.Controllers
                 Name = a.Name,
                 Biography = a.Biography
             }).ToList();
-
             return View(viewModels);
         }
     }

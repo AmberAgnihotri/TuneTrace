@@ -53,7 +53,16 @@ namespace serviceLibary.Services
                     Id = a.Id,
                     Title = a.Title,
                     ReleaseDate = a.ReleaseDate
-                }).ToList()
+                }).ToList(),
+                Songs = dto.Songs.Select(s => new SongModel(
+                    s.Id,
+                    s.AlbumId,
+                    s.Title,
+                    s.Artist ?? "",
+                    s.Album ?? "",
+                    s.ReleaseDate,
+                    s.Duration
+                )).ToList()
             };
         }
     }

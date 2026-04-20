@@ -27,6 +27,19 @@ namespace DAL.Repositories
             cmd.ExecuteNonQuery();
         }
 
+        public void AddAlbumReview(int userId, int albumId, string review, int rating)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            string query = "INSERT INTO Review (UserId, AlbumId, Rating, ReviewText) VALUES (@userId, @albumId, @rating, @review)";
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@albumId", albumId);
+            cmd.Parameters.AddWithValue("@rating", rating);
+            cmd.Parameters.AddWithValue("@review", review);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
         public List<ReviewDTO> GetReviewsBySong(int songId)
         {
             var reviews = new List<ReviewDTO>();

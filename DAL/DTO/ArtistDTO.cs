@@ -9,5 +9,6 @@ namespace DAL.DTOs
         public List<int> AlbumIds { get; set; } = new();
         public List<int> SongIds { get; set; } = new();
         public List<AlbumDto> Albums { get; set; } = new();
+        public List<SongDto> Songs { get; set; } = new();
     }
 }

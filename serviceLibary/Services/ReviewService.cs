@@ -1,5 +1,4 @@
-﻿
-using ServiceLibrary.Models;
+﻿using ServiceLibrary.Models;
 
 namespace ServiceLibrary.Services
 {
@@ -15,8 +14,15 @@ namespace ServiceLibrary.Services
         public void AddReview(int userId, int songId, string review, int rating)
         {
             if (rating < 1 || rating > 10)
-                throw new ArgumentException("Rating moet tussen 1 en 10 zijn.");
+                throw new ArgumentException("Rating must be between 1 and 10.");
             _repository.AddReview(userId, songId, review, rating);
+        }
+
+        public void AddAlbumReview(int userId, int albumId, string review, int rating)
+        {
+            if (rating < 1 || rating > 10)
+                throw new ArgumentException("Rating must be between 1 and 10.");
+            _repository.AddAlbumReview(userId, albumId, review, rating);
         }
 
         public List<ReviewModel> GetReviewsBySong(int songId)
