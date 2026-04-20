@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Albums";
+}
+
+<h2>Albums</h2>
+
+@if (ViewBag.Albums != null && ViewBag.Albums.Count > 0)
+{
+    <ul>
+        @foreach (var album in ViewBag.Albums)
+        {
+            <li>
+                <a href="/Album/Details/@album.Id">@album.Title</a> — @album.ArtistName
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No albums found.</p>
+}

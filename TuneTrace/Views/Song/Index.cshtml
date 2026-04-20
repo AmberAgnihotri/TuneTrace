@@ -1,0 +1,13 @@
+﻿<h1>Songs</h1>
+
+@foreach (var song in ViewBag.Songs)
+{
+    <div style="margin-bottom:15px; border:1px solid black; padding:10px;">
+        <b>@song.Title</b><br />
+
+        Artist: @song.Artist <br />
+        Album: @song.Album <br />
+
+        <a href="/Song/Details/@song.Id">View Details</a>
+    </div>
+}

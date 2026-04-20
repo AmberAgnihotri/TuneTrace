@@ -1,0 +1,21 @@
+﻿<h2>My Favourites - Artists</h2>
+
+@if (ViewBag.Artists != null && ((dynamic)ViewBag.Artists).Count > 0)
+{
+    @foreach (var artist in ViewBag.Artists)
+    {
+        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>@artist.Name</strong>
+            </div>
+            <form method="post" asp-action="RemoveFavouriteArtist">
+                <input type="hidden" name="artistId" value="@artist.Id" />
+                <button type="submit">Delete as Favourite</button>
+            </form>
+        </div>
+    }
+}
+else
+{
+    <p>No favourite artists yet.</p>
+}

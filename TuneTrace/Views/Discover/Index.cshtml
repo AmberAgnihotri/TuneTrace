@@ -2,78 +2,83 @@
     ViewData["Title"] = "Discover";
 }
 
-<h1>Discover</h1>
+<h2>Discover</h2>
 
-@if (TempData["Fout"] != null)
-{
-    <div class="alert alert-warning">@TempData["Fout"]</div>
-}
-
-<form method="post" asp-controller="Discover" asp-action="Zoek">
-    <div class="input-group mb-3">
-        <input type="text" name="zoekterm" class="form-control"
-               placeholder="Search for artists, albums or songs..."
-               value="@ViewBag.Zoekterm" minlength="2" required />
-        <button class="btn btn-primary" type="submit">Search</button>
-    </div>
+<form method="get" action="/Discover" style="margin-bottom: 20px;">
+    <input type="text" name="query" value="@ViewBag.Query" placeholder="Search songs, albums, artists..." />
+    <button type="submit" name="filter" value="all">All</button>
+    <button type="submit" name="filter" value="artists">Artists</button>
+    <button type="submit" name="filter" value="albums">Albums</button>
+    <button type="submit" name="filter" value="songs">Songs</button>
 </form>
-    
-@if (ViewBag.RecenteZoekopdrachten != null && ViewBag.RecenteZoekopdrachten.Count > 0)
+
+@if (ViewBag.RecentSearches != null && ViewBag.RecentSearches.Count > 0)
 {
-    <p>
-        <strong>Recent searches:</strong>
-        @foreach (var z in ViewBag.RecenteZoekopdrachten)
-        {
-            <a href="#" onclick="document.querySelector('input[name=zoekterm]').value='@z';document.querySelector('form').submit();">@z</a>
-    <span> </span>;
-        }
-    </p>
+    <div style="margin-bottom: 30px;">
+        <h4>Recent Searches</h4>
+        <ul>
+            @foreach (var search in ViewBag.RecentSearches)
+            {
+                <li><a href="/Discover?query=@search">@search</a></li>
+            }
+        </ul>
+    </div>
 }
 
-@if (ViewBag.Artiesten != null)
+@if (ViewBag.Error != null)
 {
-    <h4>Artists</h4>
-    @if (ViewBag.Artiesten.Count == 0)
-    {
-        <p>No artists found.</p>
-    }
-    else
-    {
-        <ul>
-            @foreach (var a in ViewBag.Artiesten)
-            {
-                <li>@a.Naam</li>
-            }
-        </ul>
-    }
+    <p style="color: orange;">@ViewBag.Error</p>
+}
 
-    <h4>Albums</h4>
-    @if (ViewBag.Albums.Count == 0)
-    {
-        <p>No albums found.</p>
-    }
-    else
-    {
+@if (ViewBag.Songs != null && ViewBag.Songs.Count > 0)
+{
+    <div style="margin-bottom: 20px;">
+        <h3>Songs</h3>
         <ul>
-            @foreach (var a in ViewBag.Albums)
+            @foreach (var song in ViewBag.Songs)
             {
-                <li>@a.Titel</li>
+                <li style="margin-bottom: 5px;">
+                    <a href="/Song/Details/@song.Id">@song.Title</a> — @song.Artist
+                </li>
             }
         </ul>
-    }
+    </div>
+}
 
-    <h4>Songs</h4>
-    @if (ViewBag.Songs.Count == 0)
-    {
-        <p>No songs found.</p>
-    }
-    else
-    {
+@if (ViewBag.Albums != null && ViewBag.Albums.Count > 0)
+{
+    <div style="margin-bottom: 20px;">
+        <h3>Albums</h3>
         <ul>
-            @foreach (var s in ViewBag.Songs)
+            @foreach (var album in ViewBag.Albums)
             {
-                <li>@s.Titel</li>
+                <li style="margin-bottom: 5px;">
+                    <a href="/Album/Details/@album.Id">@album.Title</a> — @album.ArtistName
+                </li>
             }
         </ul>
-    }
+    </div>
+}
+
+@if (ViewBag.Artists != null && ViewBag.Artists.Count > 0)
+{
+    <div style="margin-bottom: 20px;">
+        <h3>Artists</h3>
+        <ul>
+            @foreach (var artist in ViewBag.Artists)
+            {
+                <li style="margin-bottom: 5px;">
+                    <a href="/Artist/Details/@artist.Id">@artist.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@if (ViewBag.Query != null && ViewBag.Error == null &&
+     (ViewBag.Songs == null || ViewBag.Songs.Count == 0) &&
+     (ViewBag.Albums == null || ViewBag.Albums.Count == 0) &&
+     (ViewBag.Artists == null || ViewBag.Artists.Count == 0))
+{
+    <p>No results found for "@ViewBag.Query".</p>
 }

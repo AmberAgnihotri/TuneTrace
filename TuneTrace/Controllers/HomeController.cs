@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TuneTrace.Models;
-using TuneTrace.Repositories;
+using serviceLibary;
+using DAL.Repositories;
 using Microsoft.Data.SqlClient;
+using TuneTrace.ViewModels;
 
 namespace TuneTrace.Controllers
 {
@@ -24,7 +25,7 @@ namespace TuneTrace.Controllers
         public IActionResult Index()
         {
             ViewBag.Artists = _artistRepository.GetArtists();
-            ViewBag.Albums = _albumRepository.GetAlbums();
+            ViewBag.Albums = _albumRepository.GetAll();
             ViewBag.Songs = _songRepository.GetSongs();
             return View();
         }

@@ -1,0 +1,24 @@
+﻿@{
+    var song = ViewBag.Song;
+}
+<h1>@song.Title</h1>
+<p><strong>Artist:</strong> @song.Artist</p>
+<p><strong>Album:</strong> @song.Album</p>
+<p><strong>Release Date:</strong> @song.ReleaseDate</p>
+<p><strong>Duration:</strong> @song.Duration</p>
+
+<form method="post" action="/User/AddFavouriteSong" style="display:inline">
+    <input type="hidden" name="songId" value="@song.Id" />
+    <button type="submit">Add to Favourite</button>
+</form>
+<form method="post" action="/User/RemoveFavouriteSong" style="display:inline">
+    <input type="hidden" name="songId" value="@song.Id" />
+    <button type="submit">Remove from Favourite</button>
+</form>
+<a href="/Review?songId=@song.Id" style="margin-left: 10px; text-decoration: none;">
+    <input type="button" value="Add Rating & Review" />
+</a>
+
+<br />
+<br />
+<a href="/Song">Back</a>

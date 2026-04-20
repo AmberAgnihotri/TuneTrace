@@ -1,0 +1,90 @@
+﻿@model TuneTrace.ViewModels.ReviewViewModel
+
+<h2>Add Review</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div style="color:red; border: 1px solid red; padding: 10px; margin-bottom: 10px;">
+        @ViewBag.Error
+    </div>
+}
+
+<form method="post" asp-action="AddReview">
+    <input type="hidden" asp-for="UserId" value="1" />
+
+    <div>
+        <label>Review for:</label>
+        <select name="reviewType" id="reviewType" onchange="toggleDropdown(this.value)">
+            <option value="">-- Choose song or album --</option>
+            <option value="song">Song</option>
+            <option value="album">Album</option>
+        </select>
+    </div>
+
+    <div id="songDiv" style="display:none">
+        <label>Choose a song:</label>
+        <select asp-for="SongId">
+            <option value="0">-- Choose song --</option>
+            @foreach (var song in ViewBag.Songs)
+            {
+                <option value="@song.Id">@song.Title</option>
+            }
+        </select>
+    </div>
+
+    <div id="albumDiv" style="display:none">
+        <label>Choose an album:</label>
+        <select asp-for="AlbumId">
+            <option value="0">-- Choose album --</option>
+            @foreach (var album in ViewBag.Albums)
+            {
+                <option value="@album.Id">@album.Title</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>Rating (1-10):</label>
+        <input type="number" asp-for="Rating" min="1" max="10" required />
+    </div>
+
+    <div>
+        <label>Review:</label>
+        <textarea asp-for="ReviewText" rows="4" cols="50"></textarea>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+
+<hr />
+
+<h3>Reviews</h3>
+@if (ViewBag.Reviews != null && ((List<ServiceLibrary.Models.ReviewModel>)ViewBag.Reviews).Count > 0)
+{
+    @foreach (var review in (List<ServiceLibrary.Models.ReviewModel>)ViewBag.Reviews)
+    {
+        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px;">
+            @if (review.SongId > 0)
+            {
+                <p><strong>Song:</strong> @review.SongTitle</p>
+            }
+            @if (review.AlbumId > 0)
+            {
+                <p><strong>Album:</strong> @review.AlbumTitle</p>
+            }
+            <p><strong>Rating:</strong> @review.Rating / 10</p>
+            <p><strong>Review:</strong> @review.ReviewText</p>
+        </div>
+    }
+}
+else
+{
+    <p>No reviews yet.</p>
+}
+
+<script>
+    function toggleDropdown(value) {
+        document.getElementById('songDiv').style.display = value === 'song' ? 'block' : 'none';
+        document.getElementById('albumDiv').style.display = value === 'album' ? 'block' : 'none';
+    }
+</script>

@@ -14,17 +14,19 @@
         <h2>Tune Trace</h2>
         <a asp-controller="Home" asp-action="Index">Home</a>
         <a asp-controller="Discover" asp-action="Index">Discover</a>
-        <a asp-controller="Beoordeling" asp-action="Index">Reviews & Ratings</a>
+        <a asp-controller="Review" asp-action="Index">Reviews & Ratings</a>
+        <br />
+        <strong>My Favourites</strong>
+        <a asp-controller="User" asp-action="FavouriteArtists">Artists</a>
+        <a asp-controller="User" asp-action="FavouriteAlbums">Albums</a>
+        <a asp-controller="User" asp-action="FavouriteSongs">Songs</a>
     </div>
-
     <div class="main-content">
         @RenderBody()
-
         <footer class="border-top footer text-muted mt-5">
             &copy; 2026 - TuneTrace
         </footer>
     </div>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,0 +1,23 @@
+﻿<h2>My Favourites - Songs</h2>
+
+@if (ViewBag.Songs != null && ((dynamic)ViewBag.Songs).Count > 0)
+{
+    @foreach (var song in ViewBag.Songs)
+    {
+        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>@song.Title</strong><br />
+                <span>@song.Artist</span><br />
+                <span>@song.Album</span>
+            </div>
+            <form method="post" asp-action="RemoveFavouriteSong">
+                <input type="hidden" name="songId" value="@song.Id" />
+                <button type="submit">Delete as Favourite</button>
+            </form>
+        </div>
+    }
+}
+else
+{
+    <p>No favourite songs yet.</p>
+}

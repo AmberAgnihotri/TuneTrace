@@ -1,0 +1,22 @@
+﻿<h2>My Favourites - Albums</h2>
+
+@if (ViewBag.Albums != null && ((dynamic)ViewBag.Albums).Count > 0)
+{
+    @foreach (var album in ViewBag.Albums)
+    {
+        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>@album.Title</strong><br />
+                <span>@album.Artist</span>
+            </div>
+            <form method="post" asp-action="RemoveFavouriteAlbum">
+                <input type="hidden" name="albumId" value="@album.Id" />
+                <button type="submit">Delete as Favourite</button>
+            </form>
+        </div>
+    }
+}
+else
+{
+    <p>No favourite albums yet.</p>
+}

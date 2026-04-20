@@ -81,9 +81,11 @@ body {
             font-size: 14px;
         }
 
-.main-content {
-    margin-left: 200px;
-    padding: 30px;
-    width: 100%;
-}
+        .main-content {
+            margin-left: 200px;
+            padding: 30px;
+            width: 100%;
+            display: block;
+            flex-direction: column;
+        }
 

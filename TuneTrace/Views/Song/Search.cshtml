@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Search Songs";
+}
+
+<h2>Search Songs</h2>
+
+<form method="get" action="/Song/Search">
+    <input type="text" name="query" value="@ViewBag.Query" placeholder="Search songs..." />
+    <button type="submit">Search</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:red;">@ViewBag.Error</p>
+}
+else if (ViewBag.Songs != null && ViewBag.Songs.Count > 0)
+{
+    <ul>
+        @foreach (var song in ViewBag.Songs)
+        {
+            <li>
+                <a href="/Song/Details/@song.Id">@song.Title</a> — @song.Artist
+            </li>
+        }
+    </ul>
+}
+else if (ViewBag.Query != null)
+{
+    <p>No results found for "@ViewBag.Query".</p>
+}
