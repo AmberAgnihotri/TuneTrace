@@ -1,4 +1,4 @@
-﻿using BLL.Services;
+﻿using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using serviceLibary.Services;
 using ServiceLibrary.Services;
@@ -13,12 +13,12 @@ namespace TuneTrace.Controllers
         private readonly ArtistService _artistService;
         private readonly UserService _userService;
 
-        public DiscoverController(SongService songService, AlbumService albumService, ArtistService artistService, UserService userService)
+        public DiscoverController(IConfiguration configuration)
         {
-            _songService = songService;
-            _albumService = albumService;
-            _artistService = artistService;
-            _userService = userService;
+            _songService = new SongService(new SongRepository(configuration));
+            _albumService = new AlbumService(new AlbumRepository(configuration));
+            _artistService = new ArtistService(new ArtistRepository(configuration));
+            _userService = new UserService(new UserRepository(configuration));
         }
 
         public IActionResult Index(string query, string filter = "all")
@@ -30,7 +30,7 @@ namespace TuneTrace.Controllers
             if (query == null || query.Length < 2)
             {
                 if (query != null)
-                    ViewBag.Error = "Search term too short — please enter a minimum of 2 characters.";
+                    ViewBag.Error = "Search term too short: please enter a minimum of 2 characters.";
                 return View();
             }
 

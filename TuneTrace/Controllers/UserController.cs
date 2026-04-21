@@ -1,10 +1,9 @@
 ﻿
-using BLL.Services;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using serviceLibary.Services;
-using TuneTrace.ViewModels;
 using ServiceLibrary.Services;
-
+using TuneTrace.ViewModels;
 
 namespace TuneTrace.Controllers
 {
@@ -15,12 +14,12 @@ namespace TuneTrace.Controllers
         private readonly AlbumService _albumService;
         private readonly ArtistService _artistService;
 
-        public UserController(UserService userService, SongService songService, AlbumService albumService, ArtistService artistService)
+        public UserController(IConfiguration configuration)
         {
-            _userService = userService;
-            _songService = songService;
-            _albumService = albumService;
-            _artistService = artistService;
+            _userService = new UserService(new UserRepository(configuration));
+            _songService = new SongService(new SongRepository(configuration));
+            _albumService = new AlbumService(new AlbumRepository(configuration));
+            _artistService = new ArtistService(new ArtistRepository(configuration));
         }
 
         public IActionResult FavouriteSongs()

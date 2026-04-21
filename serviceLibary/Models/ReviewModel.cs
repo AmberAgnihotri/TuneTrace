@@ -1,4 +1,6 @@
 ﻿
+using static System.Net.WebRequestMethods;
+
 namespace ServiceLibrary.Models
 {
     public class ReviewModel
@@ -13,3 +15,4 @@ namespace ServiceLibrary.Models
         public string AlbumTitle { get; set; } = string.Empty;
     }
 }
+            

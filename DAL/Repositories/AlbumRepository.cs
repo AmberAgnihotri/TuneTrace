@@ -55,7 +55,7 @@ namespace DAL.Repositories
             var album = MapAlbum(reader);
             reader.Close();
 
-            // Load songs for this album
+            // Load songs for album
             using var songCmd = new SqlCommand(@"
                 SELECT id, album_id, Title, releaseDate, duration
                 FROM Song
@@ -93,9 +93,11 @@ namespace DAL.Repositories
                 FROM Album a
                 LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
                 LEFT JOIN Artist ar ON aa.ArtistID = ar.id
-                WHERE a.Title LIKE @query", conn);
+                WHERE a.Title LIKE @query
+                OR SOUNDEX(a.Title) = SOUNDEX(@exactQuery)", conn);
 
             cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+            cmd.Parameters.AddWithValue("@exactQuery", query);
 
             conn.Open();
             using var reader = cmd.ExecuteReader();

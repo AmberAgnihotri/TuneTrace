@@ -1,4 +1,4 @@
-﻿using BLL.Services;
+﻿using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLibrary.Services;
 using TuneTrace.ViewModels;
@@ -9,9 +9,9 @@ namespace TuneTrace.Controllers
     {
         private readonly SongService _service;
 
-        public SongController(SongService service)
+        public SongController(IConfiguration configuration)
         {
-            _service = service;
+            _service = new SongService(new SongRepository(configuration));
         }
 
         public IActionResult Index()
@@ -25,7 +25,6 @@ namespace TuneTrace.Controllers
                 ReleaseDate = s.ReleaseDate,
                 Duration = s.Duration
             }).ToList();
-
             ViewBag.Songs = songs;
             return View();
         }
@@ -34,7 +33,6 @@ namespace TuneTrace.Controllers
         {
             var song = _service.GetSongById(id);
             if (song == null) return NotFound();
-
             var viewModel = new SongViewModel
             {
                 Id = song.Id,
@@ -44,7 +42,6 @@ namespace TuneTrace.Controllers
                 ReleaseDate = song.ReleaseDate,
                 Duration = song.Duration
             };
-
             ViewBag.Song = viewModel;
             return View();
         }
@@ -56,7 +53,6 @@ namespace TuneTrace.Controllers
                 ViewBag.Error = "Search query must be at least 2 characters.";
                 return View();
             }
-
             var songs = _service.SearchSongs(query).Select(s => new SongViewModel
             {
                 Id = s.Id,
@@ -66,12 +62,9 @@ namespace TuneTrace.Controllers
                 ReleaseDate = s.ReleaseDate,
                 Duration = s.Duration
             }).ToList();
-
             ViewBag.Songs = songs;
             ViewBag.Query = query;
             return View();
         }
-
-        
     }
 }

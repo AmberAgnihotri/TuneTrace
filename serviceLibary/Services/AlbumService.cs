@@ -1,21 +1,64 @@
-﻿using DAL.DTOs;
-using DAL.Repositories;
+﻿using DAL.Repositories;
+using DAL.DTOs;
+using serviceLibary.Models;
+using ServiceLibrary.Models;
 
-namespace BLL.Services
+namespace serviceLibary.Services
 {
     public class AlbumService
     {
-        private readonly IAlbumRepository _repo;
+        private readonly IAlbumRepository _repository;
 
-        public AlbumService(IAlbumRepository repo)
+        public AlbumService(IAlbumRepository repository)
         {
-            _repo = repo;
+            _repository = repository;
         }
 
-        public List<AlbumDto> GetAll() => _repo.GetAll();
-        public AlbumDto? GetById(int id) => _repo.GetById(id);
-        public List<AlbumDto> Search(string query) => _repo.Search(query);
-        public void AddFavorite(int userId, int albumId) => _repo.AddFavorite(userId, albumId);
-        public void RemoveFavorite(int userId, int albumId) => _repo.RemoveFavorite(userId, albumId);
+        public List<AlbumModel> GetAll()
+        {
+            return _repository.GetAll().Select(MapAlbum).ToList();
+        }
+
+        public AlbumModel? GetById(int id)
+        {
+            var dto = _repository.GetById(id);
+            if (dto == null) return null;
+            return MapAlbum(dto);
+        }
+
+        public List<AlbumModel> Search(string query)
+        {
+            return _repository.Search(query).Select(MapAlbum).ToList();
+        }
+
+        public void AddFavorite(int userId, int albumId)
+        {
+            _repository.AddFavorite(userId, albumId);
+        }
+
+        public void RemoveFavorite(int userId, int albumId)
+        {
+            _repository.RemoveFavorite(userId, albumId);
+        }
+
+        private AlbumModel MapAlbum(AlbumDto dto)
+        {
+            return new AlbumModel
+            {
+                Id = dto.Id,
+                Title = dto.Title,
+                Artist = dto.Artist,
+                ReleaseDate = dto.ReleaseDate,
+                Songs = dto.Songs.Select(s => new SongModel(
+                    s.Id,
+                    s.AlbumId,
+                    s.Title,
+                    s.Artist ?? "",
+                    s.Title ?? "",
+                    s.ReleaseDate,
+                    s.Duration
+                )).ToList()
+            };
+        }
     }
-}
+    }

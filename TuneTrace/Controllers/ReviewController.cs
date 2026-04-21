@@ -1,7 +1,7 @@
-﻿
+﻿using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using serviceLibary.Services;
 using ServiceLibrary.Services;
-using BLL.Services;
 using TuneTrace.ViewModels;
 
 namespace TuneTrace.Controllers
@@ -12,11 +12,11 @@ namespace TuneTrace.Controllers
         private readonly SongService _songService;
         private readonly AlbumService _albumService;
 
-        public ReviewController(ReviewService reviewService, SongService songService, AlbumService albumService)
+        public ReviewController(IConfiguration configuration)
         {
-            _reviewService = reviewService;
-            _songService = songService;
-            _albumService = albumService;
+            _reviewService = new ReviewService(new ReviewRepository(configuration));
+            _songService = new SongService(new SongRepository(configuration));
+            _albumService = new AlbumService(new AlbumRepository(configuration));
         }
 
         public IActionResult Index()
@@ -36,23 +36,27 @@ namespace TuneTrace.Controllers
 
             if (vm.SongId > 0 && _reviewService.HasSongReview(vm.UserId, vm.SongId))
             {
-                ViewBag.Error = "Je hebt al een review voor dit nummer. Verwijder je huidige review eerst voordat je een nieuwe kunt plaatsen.";
+                ViewBag.Error = "You already have a review for this song. Please delete your current review before placing a new one.";
                 return View("Index", vm);
             }
 
             if (vm.AlbumId > 0 && _reviewService.HasAlbumReview(vm.UserId, vm.AlbumId))
             {
-                ViewBag.Error = "Je hebt al een review voor dit album. Verwijder je huidige review eerst voordat je een nieuwe kunt plaatsen.";
+                ViewBag.Error = "You already have a review for this album. Please delete your current review before placing a new one.";
                 return View("Index", vm);
             }
 
             if (vm.Rating < 1 || vm.Rating > 10)
             {
-                ViewBag.Error = "Rating moet tussen 1 en 10 zijn.";
+                ViewBag.Error = "Rating must be between 1 and 10.";
                 return View("Index", vm);
             }
 
-            _reviewService.AddReview(vm.UserId, vm.SongId, vm.ReviewText, vm.Rating);
+            if (vm.SongId > 0)
+                _reviewService.AddReview(vm.UserId, vm.SongId, vm.ReviewText, vm.Rating);
+            else if (vm.AlbumId > 0)
+                _reviewService.AddAlbumReview(vm.UserId, vm.AlbumId, vm.ReviewText, vm.Rating);
+
             return RedirectToAction("Index");
         }
     }

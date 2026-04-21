@@ -41,24 +41,52 @@ namespace DAL.Repositories
             var artist = MapArtist(reader);
             reader.Close();
 
-            // Load albums for this artist
-            using var albumCmd = new SqlCommand(@"
-                SELECT a.id, a.Title, a.ReleaseDate
-                FROM Album a
-                JOIN AlbumArtist aa ON a.id = aa.AlbumID
-                WHERE aa.ArtistID = @artistId", conn);
-            albumCmd.Parameters.AddWithValue("@artistId", id);
-            using var albumReader = albumCmd.ExecuteReader();
-            while (albumReader.Read())
+            using (var albumConn = new SqlConnection(_connectionString))
             {
-                artist.Albums.Add(new AlbumDto
+                albumConn.Open();
+                using var albumCmd = new SqlCommand(@"
+                    SELECT a.id, a.Title, a.ReleaseDate
+                    FROM Album a
+                    JOIN AlbumArtist aa ON a.id = aa.AlbumID
+                    WHERE aa.ArtistID = @artistId", albumConn);
+                albumCmd.Parameters.AddWithValue("@artistId", id);
+                using var albumReader = albumCmd.ExecuteReader();
+                while (albumReader.Read())
                 {
-                    Id = (int)albumReader["id"],
-                    Title = albumReader["Title"].ToString() ?? "",
-                    ReleaseDate = albumReader["ReleaseDate"] == DBNull.Value
-                        ? DateTime.MinValue
-                        : (DateTime)albumReader["ReleaseDate"]
-                });
+                    artist.Albums.Add(new AlbumDto
+                    {
+                        Id = (int)albumReader["id"],
+                        Title = albumReader["Title"].ToString() ?? "",
+                        ReleaseDate = albumReader["ReleaseDate"] == DBNull.Value
+                            ? DateTime.MinValue
+                            : (DateTime)albumReader["ReleaseDate"]
+                    });
+                }
+            }
+
+            using (var songConn = new SqlConnection(_connectionString))
+            {
+                songConn.Open();
+                using var songCmd = new SqlCommand(@"
+                    SELECT s.id, s.Title, s.releaseDate, ISNULL(s.duration, '00:00:00') AS duration
+                    FROM Song s
+                    JOIN Album a ON s.album_id = a.id
+                    JOIN AlbumArtist aa ON a.id = aa.AlbumID
+                    WHERE aa.ArtistID = @artistId", songConn);
+                songCmd.Parameters.AddWithValue("@artistId", id);
+                using var songReader = songCmd.ExecuteReader();
+                while (songReader.Read())
+                {
+                    artist.Songs.Add(new SongDto
+                    {
+                        Id = (int)songReader["id"],
+                        Title = songReader["Title"].ToString() ?? "",
+                        ReleaseDate = songReader["releaseDate"] == DBNull.Value
+                            ? DateTime.MinValue
+                            : (DateTime)songReader["releaseDate"],
+                        Duration = (TimeSpan)songReader["duration"]
+                    });
+                }
             }
 
             return artist;
@@ -68,8 +96,10 @@ namespace DAL.Repositories
         {
             var artists = new List<ArtistDTO>();
             using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery + " WHERE ar.Name LIKE @query", conn);
+            using var cmd = new SqlCommand(BaseQuery + @" WHERE ar.Name LIKE @query
+                OR SOUNDEX(ar.Name) = SOUNDEX(@exactQuery)", conn);
             cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+            cmd.Parameters.AddWithValue("@exactQuery", query);
             conn.Open();
             using var reader = cmd.ExecuteReader();
             while (reader.Read())

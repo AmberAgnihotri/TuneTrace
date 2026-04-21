@@ -1,7 +1,7 @@
-﻿
-public interface IReviewRepository
+﻿public interface IReviewRepository
 {
     void AddReview(int userId, int songId, string review, int rating);
+    void AddAlbumReview(int userId, int albumId, string review, int rating);
     List<ReviewDTO> GetReviewsBySong(int songId);
     List<ReviewDTO> GetReviewsByAlbum(int albumId);
     List<ReviewDTO> GetAllReviews();

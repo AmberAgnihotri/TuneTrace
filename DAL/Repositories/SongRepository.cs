@@ -57,9 +57,11 @@ namespace DAL.Repositories
             var songs = new List<SongDto>();
 
             using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery + " WHERE s.Title LIKE @query", conn);
+            using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query 
+            OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
 
             cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+            cmd.Parameters.AddWithValue("@exactQuery", query);
 
             conn.Open();
             using var reader = cmd.ExecuteReader();

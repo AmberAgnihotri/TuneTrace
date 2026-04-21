@@ -19,9 +19,7 @@
     <ul>
         @foreach (var album in Model.Albums)
         {
-            <li>
-                <a href="/Album/Details/@album.Id">@album.Title</a>
-            </li>
+            <li>@album.Title</li>
         }
     </ul>
 }
@@ -30,5 +28,29 @@ else
     <p>No albums found for this artist.</p>
 }
 
+<h3 style="margin-top: 20px;">Songs</h3>
+@if (Model.Songs != null && Model.Songs.Count > 0)
+{
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="text-align:left; padding: 5px;">Title</th>
+            <th style="text-align:left; padding: 5px;">Release Date</th>
+            <th style="text-align:left; padding: 5px;">Duration</th>
+        </tr>
+        @foreach (var song in Model.Songs)
+        {
+            <tr>
+                <td style="padding: 5px;">@song.Title</td>
+                <td style="padding: 5px;">@song.ReleaseDate.ToString("yyyy-MM-dd")</td>
+                <td style="padding: 5px;">@song.Duration</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No songs found for this artist.</p>
+}
+
 <br />
-<a asp-action="Index">Back</a>
+<a href="javascript:history.back()">Back</a>

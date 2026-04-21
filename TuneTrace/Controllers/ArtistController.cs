@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DAL.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using serviceLibary.Services;
 using TuneTrace.ViewModels;
 
@@ -8,9 +9,9 @@ namespace TuneTrace.Controllers
     {
         private readonly ArtistService _service;
 
-        public ArtistController(ArtistService service)
+        public ArtistController(IConfiguration configuration)
         {
-            _service = service;
+            _service = new ArtistService(new ArtistRepository(configuration));
         }
 
         public IActionResult Index()
@@ -22,7 +23,6 @@ namespace TuneTrace.Controllers
                 Name = a.Name,
                 Biography = a.Biography
             }).ToList();
-
             return View(viewModels);
         }
 
@@ -40,6 +40,13 @@ namespace TuneTrace.Controllers
                     Id = a.Id,
                     Title = a.Title,
                     ReleaseDate = a.ReleaseDate
+                }).ToList(),
+                Songs = artist.Songs.Select(s => new SongViewModel
+                {
+                    Id = s.Id,
+                    Title = s.Title,
+                    ReleaseDate = s.ReleaseDate,
+                    Duration = s.Duration
                 }).ToList()
             };
             return View(viewModel);
@@ -54,7 +61,6 @@ namespace TuneTrace.Controllers
                 Name = a.Name,
                 Biography = a.Biography
             }).ToList();
-
             return View(viewModels);
         }
     }

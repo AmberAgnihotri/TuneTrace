@@ -13,7 +13,6 @@ namespace ServiceLibrary.Services
         _songRepo = songRepo;
     }
 
-    // GET ALL
     public List<SongModel> GetSongs()
     {
         return _songRepo.GetSongs()
@@ -29,7 +28,6 @@ namespace ServiceLibrary.Services
             .ToList();
     }
 
-    // GET BY ID 
     public SongModel? GetSongById(int id)
     {
         var s = _songRepo.GetSongById(id);
@@ -47,7 +45,6 @@ namespace ServiceLibrary.Services
         );
     }
 
-    // SEARCH 
     public List<SongModel> SearchSongs(string query)
     {
         if (query.Length < 2)
@@ -66,18 +63,16 @@ namespace ServiceLibrary.Services
             .ToList();
     }
 
-    // FAVORITES 
     public void AddFavorite(int userId, int songId)
         => _songRepo.AddFavorite(userId, songId);
 
     public void RemoveFavorite(int userId, int songId)
         => _songRepo.RemoveFavorite(userId, songId);
 
-    // RATING / REVIEW 
     public void AddRating(int userId, int songId, int rating)
         => _songRepo.AddRating(userId, songId, rating);
 
     public void AddReview(int userId, int songId, string review)
         => _songRepo.AddReview(userId, songId, review);
-}
+    }
 }

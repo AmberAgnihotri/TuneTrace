@@ -1,5 +1,6 @@
-﻿using BLL.Services;
+﻿using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using serviceLibary.Services;
 using TuneTrace.ViewModels;
 
 namespace TuneTrace.Controllers
@@ -8,9 +9,9 @@ namespace TuneTrace.Controllers
     {
         private readonly AlbumService _service;
 
-        public AlbumController(AlbumService service)
+        public AlbumController(IConfiguration configuration)
         {
-            _service = service;
+            _service = new AlbumService(new AlbumRepository(configuration));
         }
 
         public IActionResult Index()
@@ -22,7 +23,6 @@ namespace TuneTrace.Controllers
                 ArtistName = a.Artist,
                 ReleaseDate = a.ReleaseDate
             }).ToList();
-
             ViewBag.Albums = albums;
             return View();
         }
@@ -31,7 +31,6 @@ namespace TuneTrace.Controllers
         {
             var album = _service.GetById(id);
             if (album == null) return NotFound();
-
             var viewModel = new AlbumViewModel
             {
                 Id = album.Id,
@@ -48,7 +47,6 @@ namespace TuneTrace.Controllers
                     Album = album.Title
                 }).ToList()
             };
-
             ViewBag.Album = viewModel;
             return View();
         }
@@ -60,7 +58,6 @@ namespace TuneTrace.Controllers
                 ViewBag.Error = "Search query must be at least 2 characters.";
                 return View();
             }
-
             var albums = _service.Search(query).Select(a => new AlbumViewModel
             {
                 Id = a.Id,
@@ -68,12 +65,9 @@ namespace TuneTrace.Controllers
                 ArtistName = a.Artist,
                 ReleaseDate = a.ReleaseDate
             }).ToList();
-
             ViewBag.Albums = albums;
             ViewBag.Query = query;
             return View();
         }
-
-        
     }
 }
