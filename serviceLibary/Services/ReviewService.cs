@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿using DAL.Repositories;
 using ServiceLibrary.Models;
+=======
+﻿using ServiceLibrary.Models;
+>>>>>>> fce83489ae17ca6fe53750219ae6387a197d5abc
 
 namespace ServiceLibrary.Services
 {

@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 ﻿using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using serviceLibary.Services;
+=======
+﻿using Microsoft.AspNetCore.Mvc;
+>>>>>>> fce83489ae17ca6fe53750219ae6387a197d5abc
 using ServiceLibrary.Services;
 using TuneTrace.ViewModels;
 
