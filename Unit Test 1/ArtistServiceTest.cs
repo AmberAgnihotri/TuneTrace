@@ -99,5 +99,25 @@ namespace Unit_Test_1
             Assert.AreEqual("Taylor Swift", result[0].Name);
             Assert.AreEqual("The Beatles", result[1].Name);
         }
+
+        [TestMethod]
+        public void AddFavoriteArtist_DoesNotThrow()
+        {
+            // Arrange
+            var service = new ArtistService(new FakeArtistRepository());
+
+            // Act & Assert
+            service.AddFavoriteArtist(1, 1);
+        }
+
+        [TestMethod]
+        public void RemoveFavoriteArtist_DoesNotThrow()
+        {
+            // Arrange
+            var service = new ArtistService(new FakeArtistRepository());
+
+            // Act & Assert
+            service.RemoveFavoriteArtist(1, 1);
+        }
     }
 }
