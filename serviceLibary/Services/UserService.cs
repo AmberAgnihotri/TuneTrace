@@ -1,8 +1,5 @@
-﻿
-using DAL.Repositories;
+﻿using DAL.Repositories;
 using ServiceLibrary.Models;
-
-
 
 namespace serviceLibary.Services
 {
@@ -19,13 +16,13 @@ namespace serviceLibary.Services
         {
             var dto = _repository.GetFavorites(userId);
             if (dto == null) return null;
-            return new UserModel
-            {
-                Id = dto.Id,
-                FavoriteSongIds = dto.FavoriteSongs,
-                FavoriteAlbumIds = dto.FavoriteAlbums,
-                FavoriteArtistIds = dto.FavoriteArtists
-            };
+            return new UserModel(
+                id: dto.Id,
+                account: dto.Account ?? "",
+                favoriteSongIds: dto.FavoriteSongs,
+                favoriteAlbumIds: dto.FavoriteAlbums,
+                favoriteArtistIds: dto.FavoriteArtists
+            );
         }
 
         public void AddFavoriteSong(int userId, int songId)
@@ -41,13 +38,15 @@ namespace serviceLibary.Services
             => _repository.RemoveFavoriteAlbum(userId, albumId);
 
         public void AddFavoriteArtist(int userId, int artistId)
-    => _repository.AddFavoriteArtist(userId, artistId);
+            => _repository.AddFavoriteArtist(userId, artistId);
 
         public void RemoveFavoriteArtist(int userId, int artistId)
             => _repository.RemoveFavoriteArtist(userId, artistId);
+
         public List<string> GetRecentSearches(int userId)
-    => _repository.GetRecentSearches(userId);
+            => _repository.GetRecentSearches(userId);
+
         public void SaveSearch(int userId, string searchTerm)
-    => _repository.SaveSearch(userId, searchTerm);
+            => _repository.SaveSearch(userId, searchTerm);
     }
 }

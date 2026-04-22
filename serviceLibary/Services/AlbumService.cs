@@ -43,22 +43,22 @@ namespace serviceLibary.Services
 
         private AlbumModel MapAlbum(AlbumDto dto)
         {
-            return new AlbumModel
-            {
-                Id = dto.Id,
-                Title = dto.Title,
-                Artist = dto.Artist,
-                ReleaseDate = dto.ReleaseDate,
-                Songs = dto.Songs.Select(s => new SongModel(
+            return new AlbumModel(
+                id: dto.Id,
+                title: dto.Title,
+                artist: dto.Artist,
+                artistId: dto.ArtistId,
+                releaseDate: dto.ReleaseDate,
+                songs: dto.Songs.Select(s => new SongModel(
                     s.Id,
                     s.AlbumId,
                     s.Title,
                     s.Artist ?? "",
-                    s.Title ?? "",
+                    s.Album ?? "",
                     s.ReleaseDate,
                     s.Duration
                 )).ToList()
-            };
+            );
         }
     }
-    }
+}

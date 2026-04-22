@@ -1,7 +1,5 @@
-
-﻿using DAL.Repositories;
+using DAL.Repositories;
 using ServiceLibrary.Models;
-
 
 namespace ServiceLibrary.Services
 {
@@ -30,43 +28,44 @@ namespace ServiceLibrary.Services
 
         public List<ReviewModel> GetReviewsBySong(int songId)
         {
-            return _repository.GetReviewsBySong(songId).Select(r => new ReviewModel
-            {
-                Id = r.Id,
-                UserId = r.UserId,
-                SongId = r.SongId,
-                AlbumId = r.AlbumId,
-                Rating = r.Rating,
-                ReviewText = r.ReviewText
-            }).ToList();
+            return _repository.GetReviewsBySong(songId).Select(r => new ReviewModel(
+                id: r.Id,
+                userId: r.UserId,
+                songId: r.SongId,
+                albumId: r.AlbumId,
+                rating: r.Rating,
+                reviewText: r.ReviewText,
+                songTitle: "",
+                albumTitle: ""
+            )).ToList();
         }
 
         public List<ReviewModel> GetReviewsByAlbum(int albumId)
         {
-            return _repository.GetReviewsByAlbum(albumId).Select(r => new ReviewModel
-            {
-                Id = r.Id,
-                UserId = r.UserId,
-                SongId = r.SongId,
-                AlbumId = r.AlbumId,
-                Rating = r.Rating,
-                ReviewText = r.ReviewText
-            }).ToList();
+            return _repository.GetReviewsByAlbum(albumId).Select(r => new ReviewModel(
+                id: r.Id,
+                userId: r.UserId,
+                songId: r.SongId,
+                albumId: r.AlbumId,
+                rating: r.Rating,
+                reviewText: r.ReviewText,
+                songTitle: "",
+                albumTitle: ""
+            )).ToList();
         }
 
         public List<ReviewModel> GetAllReviews()
         {
-            return _repository.GetAllReviews().Select(r => new ReviewModel
-            {
-                Id = r.Id,
-                UserId = r.UserId,
-                SongId = r.SongId,
-                AlbumId = r.AlbumId,
-                Rating = r.Rating,
-                ReviewText = r.ReviewText,
-                SongTitle = r.SongTitle,
-                AlbumTitle = r.AlbumTitle
-            }).ToList();
+            return _repository.GetAllReviews().Select(r => new ReviewModel(
+                id: r.Id,
+                userId: r.UserId,
+                songId: r.SongId,
+                albumId: r.AlbumId,
+                rating: r.Rating,
+                reviewText: r.ReviewText,
+                songTitle: r.SongTitle,
+                albumTitle: r.AlbumTitle
+            )).ToList();
         }
 
         public bool HasSongReview(int userId, int songId)

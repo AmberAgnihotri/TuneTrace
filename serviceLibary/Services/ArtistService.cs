@@ -43,18 +43,19 @@ namespace serviceLibary.Services
 
         private ArtistModel MapArtist(ArtistDTO dto)
         {
-            return new ArtistModel
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Biography = dto.Biography,
-                Albums = dto.Albums.Select(a => new AlbumModel
-                {
-                    Id = a.Id,
-                    Title = a.Title,
-                    ReleaseDate = a.ReleaseDate
-                }).ToList(),
-                Songs = dto.Songs.Select(s => new SongModel(
+            return new ArtistModel(
+                id: dto.Id,
+                name: dto.Name,
+                biography: dto.Biography,
+                albums: dto.Albums.Select(a => new AlbumModel(
+                    id: a.Id,
+                    title: a.Title,
+                    artist: a.Artist ?? "",
+                    artistId: 0,
+                    releaseDate: a.ReleaseDate,
+                    songs: new List<SongModel>()
+                )).ToList(),
+                songs: dto.Songs.Select(s => new SongModel(
                     s.Id,
                     s.AlbumId,
                     s.Title,
@@ -63,7 +64,7 @@ namespace serviceLibary.Services
                     s.ReleaseDate,
                     s.Duration
                 )).ToList()
-            };
+            );
         }
     }
 }

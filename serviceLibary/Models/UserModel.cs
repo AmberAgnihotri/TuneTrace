@@ -2,10 +2,24 @@
 {
     public class UserModel
     {
-        public int Id { get; set; }
-        public string Account { get; set; } = string.Empty;
-        public List<int> FavoriteSongIds { get; set; } = new();
-        public List<int> FavoriteAlbumIds { get; set; } = new();
-        public List<int> FavoriteArtistIds { get; set; } = new();
+        public int Id { get; }
+        public string Account { get; }
+        public List<int> FavoriteSongIds { get; }
+        public List<int> FavoriteAlbumIds { get; }
+        public List<int> FavoriteArtistIds { get; }
+
+        public UserModel(
+            int id,
+            string account,
+            List<int> favoriteSongIds,
+            List<int> favoriteAlbumIds,
+            List<int> favoriteArtistIds)
+        {
+            Id = id;
+            Account = account;
+            FavoriteSongIds = favoriteSongIds;
+            FavoriteAlbumIds = favoriteAlbumIds;
+            FavoriteArtistIds = favoriteArtistIds;
+        }
     }
 }

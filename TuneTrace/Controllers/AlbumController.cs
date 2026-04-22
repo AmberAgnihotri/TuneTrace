@@ -47,6 +47,7 @@ namespace TuneTrace.Controllers
                     Album = album.Title
                 }).ToList()
             };
+            
             ViewBag.Album = viewModel;
             return View();
         }
