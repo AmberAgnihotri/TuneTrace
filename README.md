@@ -24,5 +24,7 @@ Fr-03: Als gebruiker wil ik naar nummers, albums en artiesten kunnen zoeken op d
 K-03.01: De zoekfunctie moet fouttolerant zijn, zodat kleine typefouten nog steeds relevante resultaten opleveren.
 B-03.01: De zoekopdracht moet minimaal 2 tekens bevatten om iets te vinden.
 B-03.02: Het systeem zoekt alleen in nummers, artiesten en albums die in de database staan.
+
+# Proces 2de sprint:
 B-03.03: Het systeem geeft de laatste 5 recente opgezochte nummers, artiesten en albums weer van de gebruiker die in de database staan.
 
