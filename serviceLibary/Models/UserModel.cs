@@ -4,9 +4,12 @@
     {
         public int Id { get; }
         public string Account { get; }
-        public List<int> FavoriteSongIds { get; }
-        public List<int> FavoriteAlbumIds { get; }
-        public List<int> FavoriteArtistIds { get; }
+        private List<int> favoriteSongIds;
+        public IReadOnlyList<int> FavoriteSongIds { get { return favoriteSongIds.AsReadOnly(); } }
+        private List<int> favoriteAlbumIds;
+        public IReadOnlyList<int> FavoriteAlbumIds { get { return favoriteAlbumIds.AsReadOnly(); } }
+        private List<int> favoriteArtistIds;
+        public IReadOnlyList<int> FavoriteArtistIds { get { return favoriteArtistIds.AsReadOnly(); } }
 
         public UserModel(
             int id,
@@ -17,9 +20,9 @@
         {
             Id = id;
             Account = account;
-            FavoriteSongIds = favoriteSongIds;
-            FavoriteAlbumIds = favoriteAlbumIds;
-            FavoriteArtistIds = favoriteArtistIds;
+            this.favoriteSongIds = favoriteSongIds;
+            this.favoriteAlbumIds = favoriteAlbumIds;
+            this.favoriteArtistIds = favoriteArtistIds;
         }
     }
 }

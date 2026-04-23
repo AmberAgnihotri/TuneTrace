@@ -7,8 +7,10 @@ namespace serviceLibary.Models
         public int Id { get; }
         public string Name { get; }
         public string Biography { get; }
-        public List<AlbumModel> Albums { get; }
-        public List<SongModel> Songs { get; }
+        private List<AlbumModel> albums;
+        public IReadOnlyList<AlbumModel> Albums { get { return albums.AsReadOnly(); } }
+        private List<SongModel> songs;
+        public IReadOnlyList<SongModel> Songs { get { return songs.AsReadOnly(); } }
 
         public ArtistModel(
             int id,
@@ -20,8 +22,8 @@ namespace serviceLibary.Models
             Id = id;
             Name = name;
             Biography = biography;
-            Albums = albums;
-            Songs = songs;
+            this.albums = albums;
+            this.songs = songs;
         }
     }
 }
