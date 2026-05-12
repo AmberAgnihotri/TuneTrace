@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.DTOs
+﻿namespace DAL.DTO
 {
     public class SongDto
     {
-        public int Id { get; set; }
-        public int AlbumId { get; set; }
-        public string Title { get; set; } = string.Empty;
+        public int Id { get; }
+        public int AlbumId { get; }
+        public string Title { get; }
+        public string Artist { get; }
+        public string Album { get; }
+        public DateTime ReleaseDate { get; }
+        public TimeSpan Duration { get; }
 
-        public string Artist { get; set; } = string.Empty;
-        public string Album { get; set; } = string.Empty;
-
-        public DateTime ReleaseDate { get; set; }
-        public TimeSpan Duration { get; set; }
+        public SongDto(int id, int albumId, string title, string artist, string album, DateTime releaseDate, TimeSpan duration)
+        {
+            Id = id;
+            AlbumId = albumId;
+            Title = title;
+            Artist = artist;
+            Album = album;
+            ReleaseDate = releaseDate;
+            Duration = duration;
+        }
     }
-    }
+}

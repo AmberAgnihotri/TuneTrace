@@ -1,4 +1,4 @@
-﻿using DAL.DTOs;
+﻿using DAL.DTO;
 
 namespace DAL.Repositories
 {

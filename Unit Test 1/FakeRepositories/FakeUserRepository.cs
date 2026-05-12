@@ -1,6 +1,5 @@
-﻿using DAL.DTOs;
+﻿using DAL.DTO;
 using DAL.Repositories;
-
 namespace Unit_Test_1.FakeRepositories
 {
     public class FakeUserRepository : IUserRepository
@@ -8,17 +7,9 @@ namespace Unit_Test_1.FakeRepositories
         public UserDTO? GetFavorites(int userId)
         {
             if (userId == 1)
-                return new UserDTO
-                {
-                    Id = 1,
-                    Account = "",
-                    FavoriteSongs = new List<int> { 1, 2 },
-                    FavoriteAlbums = new List<int> { 1 },
-                    FavoriteArtists = new List<int> { 1 }
-                };
+                return new UserDTO(1, "", new List<int> { 1, 2 }, new List<int> { 1 }, new List<int> { 1 });
             return null;
         }
-
         public bool SaveFavoriteSong(int userId, int songId) => true;
         public void AddFavoriteSong(int userId, int songId) { }
         public void RemoveFavoriteSong(int userId, int songId) { }
@@ -26,7 +17,5 @@ namespace Unit_Test_1.FakeRepositories
         public void RemoveFavoriteAlbum(int userId, int albumId) { }
         public void AddFavoriteArtist(int userId, int artistId) { }
         public void RemoveFavoriteArtist(int userId, int artistId) { }
-        public List<string> GetRecentSearches(int userId) => new List<string> { "Taylor Swift", "Midnights" };
-        public void SaveSearch(int userId, string searchTerm) { }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using DAL.DTOs;
+using DAL.DTO;
 using Microsoft.Extensions.Configuration;
 
 namespace DAL.Repositories
@@ -38,9 +38,13 @@ namespace DAL.Repositories
             conn.Open();
             using var reader = cmd.ExecuteReader();
             if (!reader.Read()) return null;
-            var artist = MapArtist(reader);
+
+            var artistId = (int)reader["id"];
+            var name = reader["Name"].ToString() ?? "";
+            var biography = reader["Biography"] == DBNull.Value ? "" : reader["Biography"].ToString() ?? "";
             reader.Close();
 
+            var albums = new List<AlbumDto>();
             using (var albumConn = new SqlConnection(_connectionString))
             {
                 albumConn.Open();
@@ -49,21 +53,22 @@ namespace DAL.Repositories
                     FROM Album a
                     JOIN AlbumArtist aa ON a.id = aa.AlbumID
                     WHERE aa.ArtistID = @artistId", albumConn);
-                albumCmd.Parameters.AddWithValue("@artistId", id);
+                albumCmd.Parameters.AddWithValue("@artistId", artistId);
                 using var albumReader = albumCmd.ExecuteReader();
                 while (albumReader.Read())
                 {
-                    artist.Albums.Add(new AlbumDto
-                    {
-                        Id = (int)albumReader["id"],
-                        Title = albumReader["Title"].ToString() ?? "",
-                        ReleaseDate = albumReader["ReleaseDate"] == DBNull.Value
-                            ? DateTime.MinValue
-                            : (DateTime)albumReader["ReleaseDate"]
-                    });
+                    albums.Add(new AlbumDto(
+                        id: (int)albumReader["id"],
+                        title: albumReader["Title"].ToString() ?? "",
+                        releaseDate: albumReader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)albumReader["ReleaseDate"],
+                        artist: name,
+                        artistId: artistId,
+                        songs: new List<SongDto>()
+                    ));
                 }
             }
 
+            var songs = new List<SongDto>();
             using (var songConn = new SqlConnection(_connectionString))
             {
                 songConn.Open();
@@ -73,23 +78,23 @@ namespace DAL.Repositories
                     JOIN Album a ON s.album_id = a.id
                     JOIN AlbumArtist aa ON a.id = aa.AlbumID
                     WHERE aa.ArtistID = @artistId", songConn);
-                songCmd.Parameters.AddWithValue("@artistId", id);
+                songCmd.Parameters.AddWithValue("@artistId", artistId);
                 using var songReader = songCmd.ExecuteReader();
                 while (songReader.Read())
                 {
-                    artist.Songs.Add(new SongDto
-                    {
-                        Id = (int)songReader["id"],
-                        Title = songReader["Title"].ToString() ?? "",
-                        ReleaseDate = songReader["releaseDate"] == DBNull.Value
-                            ? DateTime.MinValue
-                            : (DateTime)songReader["releaseDate"],
-                        Duration = (TimeSpan)songReader["duration"]
-                    });
+                    songs.Add(new SongDto(
+                        id: (int)songReader["id"],
+                        albumId: 0,
+                        title: songReader["Title"].ToString() ?? "",
+                        artist: name,
+                        album: "",
+                        releaseDate: songReader["releaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)songReader["releaseDate"],
+                        duration: (TimeSpan)songReader["duration"]
+                    ));
                 }
             }
 
-            return artist;
+            return new ArtistDTO(artistId, name, biography, albums, songs);
         }
 
         public List<ArtistDTO> SearchArtists(string query)
@@ -129,14 +134,15 @@ namespace DAL.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        private ArtistDTO MapArtist(SqlDataReader reader)
+        private static ArtistDTO MapArtist(SqlDataReader reader)
         {
-            return new ArtistDTO
-            {
-                Id = (int)reader["id"],
-                Name = reader["Name"].ToString() ?? "",
-                Biography = reader["Biography"] == DBNull.Value ? "" : reader["Biography"].ToString() ?? ""
-            };
+            return new ArtistDTO(
+                id: (int)reader["id"],
+                name: reader["Name"].ToString() ?? "",
+                biography: reader["Biography"] == DBNull.Value ? "" : reader["Biography"].ToString() ?? "",
+                albums: new List<AlbumDto>(),
+                songs: new List<SongDto>()
+            );
         }
     }
 }

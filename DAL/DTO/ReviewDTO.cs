@@ -1,12 +1,27 @@
 ﻿
-public class ReviewDTO
+namespace DAL.DTO
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public int AlbumId { get; set; }
-    public int SongId { get; set; }
-    public int Rating { get; set; }
-    public string ReviewText { get; set; } = string.Empty;
-    public string SongTitle { get; set; } = string.Empty;
-    public string AlbumTitle { get; set; } = string.Empty;
+    public class ReviewDTO
+    {
+        public int Id { get; }
+        public int UserId { get; }
+        public int AlbumId { get; }
+        public int SongId { get; }
+        public int Rating { get; }
+        public string ReviewText { get; }
+        public string SongTitle { get; }
+        public string AlbumTitle { get; }
+
+        public ReviewDTO(int id, int userId, int albumId, int songId, int rating, string reviewText, string songTitle, string albumTitle)
+        {
+            Id = id;
+            UserId = userId;
+            AlbumId = albumId;
+            SongId = songId;
+            Rating = rating;
+            ReviewText = reviewText;
+            SongTitle = songTitle;
+            AlbumTitle = albumTitle;
+        }
+    }
 }

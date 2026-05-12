@@ -1,5 +1,5 @@
 ﻿using DAL.Repositories;
-using DAL.DTOs;
+using DAL.DTO;
 using serviceLibary.Models;
 using ServiceLibrary.Models;
 

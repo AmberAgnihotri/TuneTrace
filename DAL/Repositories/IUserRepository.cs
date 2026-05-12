@@ -1,6 +1,4 @@
-﻿using DAL.DTOs;
-
-
+﻿using DAL.DTO;
 namespace DAL.Repositories
 {
     public interface IUserRepository
@@ -13,7 +11,5 @@ namespace DAL.Repositories
         void RemoveFavoriteAlbum(int userId, int albumId);
         void AddFavoriteArtist(int userId, int artistId);
         void RemoveFavoriteArtist(int userId, int artistId);
-        void SaveSearch(int userId, string searchTerm);
-        List<string> GetRecentSearches(int userId);
     }
 }

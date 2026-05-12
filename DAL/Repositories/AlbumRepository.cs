@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using DAL.DTOs;
+using DAL.DTO;
 using Microsoft.Extensions.Configuration;
 
 namespace DAL.Repositories
@@ -52,35 +52,35 @@ namespace DAL.Repositories
             if (!reader.Read())
                 return null;
 
-            var album = MapAlbum(reader);
+            var albumId = (int)reader["id"];
+            var title = reader["Title"].ToString() ?? "";
+            var releaseDate = reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"];
+            var artist = reader["Artist"].ToString() ?? "";
             reader.Close();
 
-            // Load songs for album
+            var songs = new List<SongDto>();
             using var songCmd = new SqlCommand(@"
                 SELECT id, album_id, Title, releaseDate, duration
                 FROM Song
                 WHERE album_id = @albumId", conn);
 
-            songCmd.Parameters.AddWithValue("@albumId", id);
+            songCmd.Parameters.AddWithValue("@albumId", albumId);
             using var songReader = songCmd.ExecuteReader();
 
             while (songReader.Read())
             {
-                album.Songs.Add(new SongDto
-                {
-                    Id = (int)songReader["id"],
-                    AlbumId = (int)songReader["album_id"],
-                    Title = songReader["Title"].ToString() ?? "",
-                    ReleaseDate = songReader["releaseDate"] == DBNull.Value
-                        ? DateTime.MinValue
-                        : (DateTime)songReader["releaseDate"],
-                    Duration = songReader["duration"] == DBNull.Value
-                        ? TimeSpan.Zero
-                        : (TimeSpan)songReader["duration"]
-                });
+                songs.Add(new SongDto(
+                    id: (int)songReader["id"],
+                    albumId: (int)songReader["album_id"],
+                    title: songReader["Title"].ToString() ?? "",
+                    artist: "",
+                    album: title,
+                    releaseDate: songReader["releaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)songReader["releaseDate"],
+                    duration: songReader["duration"] == DBNull.Value ? TimeSpan.Zero : (TimeSpan)songReader["duration"]
+                ));
             }
 
-            return album;
+            return new AlbumDto(albumId, title, releaseDate, artist, 0, songs);
         }
 
         public List<AlbumDto> Search(string query)
@@ -130,17 +130,16 @@ namespace DAL.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        private AlbumDto MapAlbum(SqlDataReader reader)
+        private static AlbumDto MapAlbum(SqlDataReader reader)
         {
-            return new AlbumDto
-            {
-                Id = (int)reader["id"],
-                Title = reader["Title"].ToString() ?? "",
-                ReleaseDate = reader["ReleaseDate"] == DBNull.Value
-                    ? DateTime.MinValue
-                    : (DateTime)reader["ReleaseDate"],
-                Artist = reader["Artist"].ToString() ?? ""
-            };
+            return new AlbumDto(
+                id: (int)reader["id"],
+                title: reader["Title"].ToString() ?? "",
+                releaseDate: reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"],
+                artist: reader["Artist"].ToString() ?? "",
+                artistId: 0,
+                songs: new List<SongDto>()
+            );
         }
     }
 }

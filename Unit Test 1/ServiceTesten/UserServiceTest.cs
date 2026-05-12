@@ -1,7 +1,8 @@
 ﻿using DAL.Repositories;
-using serviceLibary.Services;
-using Unit_Test_1.FakeRepositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using serviceLibary.Services;
+using ServiceLibrary.Services;
+using Unit_Test_1.FakeRepositories;
 
 namespace Unit_Test_1.ServiceTesten
 {
@@ -11,8 +12,11 @@ namespace Unit_Test_1.ServiceTesten
         [TestMethod]
         public void GetFavorites_ReturnsCorrectFavorites()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act
             var result = service.GetFavorites(1);
+            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Id);
             Assert.HasCount(2, result.FavoriteSongIds);
@@ -23,67 +27,66 @@ namespace Unit_Test_1.ServiceTesten
         [TestMethod]
         public void GetFavorites_ReturnsNull_WhenUserNotFound()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act
             var result = service.GetFavorites(99);
+            // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
         public void AddFavoriteSong_DoesNotThrow()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act & Assert
             service.AddFavoriteSong(1, 1);
         }
 
         [TestMethod]
         public void RemoveFavoriteSong_DoesNotThrow()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act & Assert
             service.RemoveFavoriteSong(1, 1);
         }
 
         [TestMethod]
         public void AddFavoriteAlbum_DoesNotThrow()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act & Assert
             service.AddFavoriteAlbum(1, 1);
         }
 
         [TestMethod]
         public void RemoveFavoriteAlbum_DoesNotThrow()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act & Assert
             service.RemoveFavoriteAlbum(1, 1);
         }
 
         [TestMethod]
         public void AddFavoriteArtist_DoesNotThrow()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act & Assert
             service.AddFavoriteArtist(1, 1);
         }
 
         [TestMethod]
         public void RemoveFavoriteArtist_DoesNotThrow()
         {
+            // Arrange
             var service = new UserService(new FakeUserRepository());
+            // Act & Assert
             service.RemoveFavoriteArtist(1, 1);
-        }
-
-        [TestMethod]
-        public void GetRecentSearches_ReturnsSearches()
-        {
-            var service = new UserService(new FakeUserRepository());
-            var result = service.GetRecentSearches(1);
-            Assert.HasCount(2, result);
-            Assert.AreEqual("Taylor Swift", result[0]);
-        }
-
-        [TestMethod]
-        public void SaveSearch_DoesNotThrow()
-        {
-            var service = new UserService(new FakeUserRepository());
-            service.SaveSearch(1, "Taylor Swift");
         }
     }
 }

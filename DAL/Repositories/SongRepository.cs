@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using DAL.DTOs;
+using DAL.DTO;
 using Microsoft.Extensions.Configuration;
 
 namespace DAL.Repositories
@@ -24,16 +24,12 @@ namespace DAL.Repositories
         public List<SongDto> GetSongs()
         {
             var songs = new List<SongDto>();
-
             using var conn = new SqlConnection(_connectionString);
             using var cmd = new SqlCommand(BaseQuery, conn);
-
             conn.Open();
             using var reader = cmd.ExecuteReader();
-
             while (reader.Read())
                 songs.Add(MapSong(reader));
-
             return songs;
         }
 
@@ -41,34 +37,25 @@ namespace DAL.Repositories
         {
             using var conn = new SqlConnection(_connectionString);
             using var cmd = new SqlCommand(BaseQuery + " WHERE s.id = @id", conn);
-
             cmd.Parameters.AddWithValue("@id", id);
-
             conn.Open();
             using var reader = cmd.ExecuteReader();
-
             if (!reader.Read()) return null;
-
             return MapSong(reader);
         }
 
         public List<SongDto> SearchSongs(string query)
         {
             var songs = new List<SongDto>();
-
             using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query 
-            OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
-
+            using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query
+                OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
             cmd.Parameters.AddWithValue("@query", "%" + query + "%");
             cmd.Parameters.AddWithValue("@exactQuery", query);
-
             conn.Open();
             using var reader = cmd.ExecuteReader();
-
             while (reader.Read())
                 songs.Add(MapSong(reader));
-
             return songs;
         }
 
@@ -118,18 +105,17 @@ namespace DAL.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        private SongDto MapSong(SqlDataReader reader)
+        private static SongDto MapSong(SqlDataReader reader)
         {
-            return new SongDto
-            {
-                Id = (int)reader["id"],
-                AlbumId = (int)reader["album_id"],
-                Title = reader["Title"].ToString() ?? "",
-                Artist = reader["ArtistName"].ToString() ?? "",
-                Album = reader["AlbumTitle"].ToString() ?? "",
-                ReleaseDate = reader["releaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["releaseDate"],
-                Duration = reader["duration"] == DBNull.Value ? TimeSpan.Zero : (TimeSpan)reader["duration"]
-            };
+            return new SongDto(
+                id: (int)reader["id"],
+                albumId: (int)reader["album_id"],
+                title: reader["Title"].ToString() ?? "",
+                artist: reader["ArtistName"].ToString() ?? "",
+                album: reader["AlbumTitle"].ToString() ?? "",
+                releaseDate: reader["releaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["releaseDate"],
+                duration: reader["duration"] == DBNull.Value ? TimeSpan.Zero : (TimeSpan)reader["duration"]
+            );
         }
     }
 }
