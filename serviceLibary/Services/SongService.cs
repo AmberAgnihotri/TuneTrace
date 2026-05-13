@@ -1,6 +1,5 @@
-﻿using DAL.Repositories;
+﻿using Interfaces.Interfaces;
 using ServiceLibrary.Models;
-using System.Linq;
 
 namespace ServiceLibrary.Services
 {

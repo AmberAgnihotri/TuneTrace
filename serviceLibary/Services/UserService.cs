@@ -1,4 +1,4 @@
-﻿using DAL.Repositories;
+﻿using Interfaces.Interfaces;
 using ServiceLibrary.Models;
 namespace serviceLibary.Services
 {

@@ -1,4 +1,4 @@
-﻿namespace DAL.Repositories
+﻿namespace Interfaces.Interfaces
 {
     public interface ISearchHistoryRepository
     {

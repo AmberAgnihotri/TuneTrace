@@ -1,5 +1,5 @@
 ﻿using DAL.DTO;
-namespace DAL.Repositories
+namespace Interfaces.Interfaces
 {
     public interface IUserRepository
     {

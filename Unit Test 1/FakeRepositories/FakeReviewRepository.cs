@@ -1,5 +1,5 @@
 ﻿using DAL.DTO;
-using DAL.Repositories;
+using Interfaces.Interfaces;
 namespace Unit_Test_1.FakeRepositories
 {
     public class FakeReviewRepository : IReviewRepository

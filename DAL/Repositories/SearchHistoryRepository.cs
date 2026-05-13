@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Interfaces.Interfaces;
+
 namespace DAL.Repositories
 {
     public class SearchHistoryRepository : ISearchHistoryRepository

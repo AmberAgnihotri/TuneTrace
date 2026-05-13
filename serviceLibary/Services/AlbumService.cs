@@ -1,4 +1,4 @@
-﻿using DAL.Repositories;
+﻿using Interfaces.Interfaces;
 using DAL.DTO;
 using serviceLibary.Models;
 using ServiceLibrary.Models;

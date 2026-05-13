@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using DAL.DTO;
+using Interfaces.Interfaces;
 
 namespace DAL.Repositories
 {
