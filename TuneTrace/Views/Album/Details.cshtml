@@ -1,13 +1,14 @@
-﻿@{
+﻿@using TuneTrace.ViewModels
+@{
     ViewData["Title"] = "Album Details";
-    var album = ViewBag.Album;
+    AlbumViewModel? album = ViewBag.Album;
 }
-<h2>@album.Title</h2>
-<p><strong>Artist:</strong> @album.ArtistName</p>
-<p><strong>Release Date:</strong> @album.ReleaseDate.ToString("yyyy-MM-dd")</p>
 
+<h2>@(album?.Title ?? "Unknown")</h2>
+<p><strong>Artist:</strong> @(album?.ArtistName ?? "Unknown")</p>
+<p><strong>Release Date:</strong> @(album?.ReleaseDate.ToString("yyyy-MM-dd") ?? "Unknown")</p>
 <h3>Songs on this album:</h3>
-@if (album.Songs != null && album.Songs.Count > 0)
+@if (album?.Songs != null && album.Songs.Count > 0)
 {
     <ul>
         @foreach (var song in album.Songs)
@@ -20,19 +21,17 @@ else
 {
     <p>No songs found for this album.</p>
 }
-
 <form method="post" action="/User/AddFavouriteAlbum" style="display:inline">
-    <input type="hidden" name="albumId" value="@album.Id" />
+    <input type="hidden" name="albumId" value="@album?.Id" />
     <button type="submit">Add to Favourite</button>
 </form>
 <form method="post" action="/User/RemoveFavouriteAlbum" style="display:inline">
-    <input type="hidden" name="albumId" value="@album.Id" />
+    <input type="hidden" name="albumId" value="@album?.Id" />
     <button type="submit">Remove from Favourite</button>
 </form>
-<a href="/Review?albumId=@album.Id" style="margin-left: 10px; text-decoration: none;">
+<a href="/Review?albumId=@album?.Id" style="margin-left: 10px; text-decoration: none;">
     <input type="button" value="Add Rating & Review" />
 </a>
-
 <br />
 <br />
 <a href="javascript:history.back()">Back</a>

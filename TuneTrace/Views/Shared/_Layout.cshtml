@@ -22,6 +22,12 @@
         <a asp-controller="User" asp-action="FavouriteSongs">Songs</a>
     </div>
     <div class="main-content">
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.Error
+            </div>
+        }
         @RenderBody()
         <footer class="border-top footer text-muted mt-5">
             &copy; 2026 - TuneTrace

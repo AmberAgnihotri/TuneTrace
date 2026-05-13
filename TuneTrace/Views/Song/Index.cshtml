@@ -1,13 +1,23 @@
-﻿<h1>Songs</h1>
-
-@foreach (var song in ViewBag.Songs)
+﻿@{
+    ViewData["Title"] = "Songs";
+}
+<h1>Songs</h1>
+@if (ViewBag.Error == null)
 {
-    <div style="margin-bottom:15px; border:1px solid black; padding:10px;">
-        <b>@song.Title</b><br />
-
-        Artist: @song.Artist <br />
-        Album: @song.Album <br />
-
-        <a href="/Song/Details/@song.Id">View Details</a>
-    </div>
+    @if (ViewBag.Songs != null)
+    {
+        @foreach (var song in ViewBag.Songs)
+        {
+            <div style="margin-bottom:15px; border:1px solid black; padding:10px;">
+                <b>@song.Title</b><br />
+                Artist: @song.Artist <br />
+                Album: @song.Album <br />
+                <a href="/Song/Details/@song.Id">View Details</a>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No songs found.</p>
+    }
 }

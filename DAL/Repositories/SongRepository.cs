@@ -24,86 +24,135 @@ namespace DAL.Repositories
 
         public List<SongDto> GetSongs()
         {
-            var songs = new List<SongDto>();
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery, conn);
-            conn.Open();
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-                songs.Add(MapSong(reader));
-            return songs;
+            try
+            {
+                var songs = new List<SongDto>();
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(BaseQuery, conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    songs.Add(MapSong(reader));
+                return songs;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while retrieving the songs.", ex);
+            }
         }
 
         public SongDto? GetSongById(int id)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery + " WHERE s.id = @id", conn);
-            cmd.Parameters.AddWithValue("@id", id);
-            conn.Open();
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return null;
-            return MapSong(reader);
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(BaseQuery + " WHERE s.id = @id", conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (!reader.Read()) return null;
+                return MapSong(reader);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while retrieving the song.", ex);
+            }
         }
 
         public List<SongDto> SearchSongs(string query)
         {
-            var songs = new List<SongDto>();
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query
-                OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
-            cmd.Parameters.AddWithValue("@query", "%" + query + "%");
-            cmd.Parameters.AddWithValue("@exactQuery", query);
-            conn.Open();
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-                songs.Add(MapSong(reader));
-            return songs;
+            try
+            {
+                var songs = new List<SongDto>();
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query
+                    OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
+                cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+                cmd.Parameters.AddWithValue("@exactQuery", query);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    songs.Add(MapSong(reader));
+                return songs;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while searching for songs.", ex);
+            }
         }
 
         public void AddFavorite(int userId, int songId)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(
-                "INSERT INTO UserSong (UserId, SongId) VALUES (@userId, @songId)", conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            cmd.Parameters.AddWithValue("@songId", songId);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(
+                    "INSERT INTO UserSong (UserId, SongId) VALUES (@userId, @songId)", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@songId", songId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while adding the song to favorites.", ex);
+            }
         }
 
         public void RemoveFavorite(int userId, int songId)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(
-                "DELETE FROM UserSong WHERE UserId = @userId AND SongId = @songId", conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            cmd.Parameters.AddWithValue("@songId", songId);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(
+                    "DELETE FROM UserSong WHERE UserId = @userId AND SongId = @songId", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@songId", songId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while removing the song from favorites.", ex);
+            }
         }
 
         public void AddReview(int userId, int songId, string review)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(
-                "INSERT INTO Review (UserId, SongId, ReviewText) VALUES (@userId, @songId, @review)", conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            cmd.Parameters.AddWithValue("@songId", songId);
-            cmd.Parameters.AddWithValue("@review", review);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(
+                    "INSERT INTO Review (UserId, SongId, ReviewText) VALUES (@userId, @songId, @review)", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@songId", songId);
+                cmd.Parameters.AddWithValue("@review", review);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while adding the review.", ex);
+            }
         }
 
         public void AddRating(int userId, int songId, int rating)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(
-                "INSERT INTO Review (UserId, SongId, Rating) VALUES (@userId, @songId, @rating)", conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            cmd.Parameters.AddWithValue("@songId", songId);
-            cmd.Parameters.AddWithValue("@rating", rating);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(
+                    "INSERT INTO Review (UserId, SongId, Rating) VALUES (@userId, @songId, @rating)", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@songId", songId);
+                cmd.Parameters.AddWithValue("@rating", rating);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while adding the rating.", ex);
+            }
         }
 
         private static SongDto MapSong(SqlDataReader reader)

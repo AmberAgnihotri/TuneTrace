@@ -1,14 +1,19 @@
 ﻿@model List<TuneTrace.ViewModels.ArtistViewModel>
 
-<h1>Artiesten</h1>
+@{
+    if (Model == null || ViewBag.Error != null)
+    {
+        return;
+    }
+}
 
+<h1>Artiesten</h1>
 <form asp-action="Search" method="get">
     <input type="text" name="query" placeholder="Zoek artiest..." />
     <button type="submit">Zoeken</button>
 </form>
-
 <ul>
-    @foreach (var artist in Model)
+    @foreach (var artist in Model!)
     {
         <li>
             <a asp-action="Details" asp-route-id="@artist.Id">@artist.Name</a>

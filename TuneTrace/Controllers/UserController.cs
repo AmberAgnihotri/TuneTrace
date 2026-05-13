@@ -24,74 +24,146 @@ namespace TuneTrace.Controllers
 
         public IActionResult FavouriteSongs()
         {
-            var favorites = _userService.GetFavorites(1);
-            var songs = _songService.GetSongs()
-                .Where(s => favorites!.FavoriteSongIds.Contains(s.Id))
-                .ToList();
-            ViewBag.Songs = songs;
-            return View();
+            try
+            {
+                var favorites = _userService.GetFavorites(1);
+                var songs = _songService.GetSongs()
+                    .Where(s => favorites!.FavoriteSongIds.Contains(s.Id))
+                    .ToList();
+                ViewBag.Songs = songs;
+                return View();
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while retrieving your favourite songs.";
+                return View();
+            }
         }
 
         public IActionResult FavouriteAlbums()
         {
-            var favorites = _userService.GetFavorites(1);
-            var albums = _albumService.GetAll()
-                .Where(a => favorites!.FavoriteAlbumIds.Contains(a.Id))
-                .ToList();
-            ViewBag.Albums = albums;
-            return View();
+            try
+            {
+                var favorites = _userService.GetFavorites(1);
+                var albums = _albumService.GetAll()
+                    .Where(a => favorites!.FavoriteAlbumIds.Contains(a.Id))
+                    .ToList();
+                ViewBag.Albums = albums;
+                return View();
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while retrieving your favourite albums.";
+                return View();
+            }
         }
 
         public IActionResult FavouriteArtists()
         {
-            var favorites = _userService.GetFavorites(1);
-            var artists = _artistService.GetArtists()
-                .Where(a => favorites!.FavoriteArtistIds.Contains(a.Id))
-                .ToList();
-            ViewBag.Artists = artists;
-            return View();
+            try
+            {
+                var favorites = _userService.GetFavorites(1);
+                var artists = _artistService.GetArtists()
+                    .Where(a => favorites!.FavoriteArtistIds.Contains(a.Id))
+                    .ToList();
+                ViewBag.Artists = artists;
+                return View();
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while retrieving your favourite artists.";
+                return View();
+            }
         }
 
         [HttpPost]
         public IActionResult AddFavouriteSong(int songId)
         {
-            _userService.AddFavoriteSong(1, songId);
-            return RedirectToAction("FavouriteSongs");
+            try
+            {
+                _userService.AddFavoriteSong(1, songId);
+                return RedirectToAction("FavouriteSongs");
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while adding the song to favourites.";
+                return View("FavouriteSongs");
+            }
         }
 
         [HttpPost]
         public IActionResult RemoveFavouriteSong(int songId)
         {
-            _userService.RemoveFavoriteSong(1, songId);
-            return RedirectToAction("FavouriteSongs");
+            try
+            {
+                _userService.RemoveFavoriteSong(1, songId);
+                return RedirectToAction("FavouriteSongs");
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while removing the song from favourites.";
+                return View("FavouriteSongs");
+            }
         }
 
         [HttpPost]
         public IActionResult AddFavouriteAlbum(int albumId)
         {
-            _userService.AddFavoriteAlbum(1, albumId);
-            return RedirectToAction("FavouriteAlbums");
+            try
+            {
+                _userService.AddFavoriteAlbum(1, albumId);
+                return RedirectToAction("FavouriteAlbums");
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while adding the album to favourites.";
+                return View("FavouriteAlbums");
+            }
         }
 
         [HttpPost]
         public IActionResult RemoveFavouriteAlbum(int albumId)
         {
-            _userService.RemoveFavoriteAlbum(1, albumId);
-            return RedirectToAction("FavouriteAlbums");
+            try
+            {
+                _userService.RemoveFavoriteAlbum(1, albumId);
+                return RedirectToAction("FavouriteAlbums");
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while removing the album from favourites.";
+                return View("FavouriteAlbums");
+            }
         }
 
         [HttpPost]
         public IActionResult AddFavouriteArtist(int artistId)
         {
-            _userService.AddFavoriteArtist(1, artistId);
-            return RedirectToAction("FavouriteArtists");
+            try
+            {
+                _userService.AddFavoriteArtist(1, artistId);
+                return RedirectToAction("FavouriteArtists");
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while adding the artist to favourites.";
+                return View("FavouriteArtists");
+            }
         }
 
         [HttpPost]
         public IActionResult RemoveFavouriteArtist(int artistId)
         {
-            _userService.RemoveFavoriteArtist(1, artistId);
-            return RedirectToAction("FavouriteArtists");
+            try
+            {
+                _userService.RemoveFavoriteArtist(1, artistId);
+                return RedirectToAction("FavouriteArtists");
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while removing the artist from favourites.";
+                return View("FavouriteArtists");
+            }
         }
     }
 }

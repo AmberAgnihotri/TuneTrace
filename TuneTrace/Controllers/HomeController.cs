@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using serviceLibary;
 using DAL.Repositories;
 using Microsoft.Data.SqlClient;
 using TuneTrace.ViewModels;
@@ -24,10 +23,18 @@ namespace TuneTrace.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Artists = _artistRepository.GetArtists();
-            ViewBag.Albums = _albumRepository.GetAll();
-            ViewBag.Songs = _songRepository.GetSongs();
-            return View();
+            try
+            {
+                ViewBag.Artists = _artistRepository.GetArtists();
+                ViewBag.Albums = _albumRepository.GetAll();
+                ViewBag.Songs = _songRepository.GetSongs();
+                return View();
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Something went wrong while loading the homepage.";
+                return View();
+            }
         }
 
         public IActionResult Privacy()
@@ -47,11 +54,11 @@ namespace TuneTrace.Controllers
             {
                 using var conn = new SqlConnection(_connectionString);
                 conn.Open();
-                return Content(" Connection Succesful!");
+                return Content("Connection Successful!");
             }
             catch (Exception ex)
             {
-                return Content(" Wrong: " + ex.Message);
+                return Content("Something went wrong: " + ex.Message);
             }
         }
     }

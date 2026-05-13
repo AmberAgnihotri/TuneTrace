@@ -17,118 +17,153 @@ namespace DAL.Repositories
 
         public List<AlbumDto> GetAll()
         {
-            var albums = new List<AlbumDto>();
+            try
+            {
+                var albums = new List<AlbumDto>();
 
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(@"
-                SELECT a.id, a.Title, a.ReleaseDate, ar.Name AS Artist
-                FROM Album a
-                LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
-                LEFT JOIN Artist ar ON aa.ArtistID = ar.id", conn);
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(@"
+                    SELECT a.id, a.Title, a.ReleaseDate, ar.Name AS Artist
+                    FROM Album a
+                    LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
+                    LEFT JOIN Artist ar ON aa.ArtistID = ar.id", conn);
 
-            conn.Open();
-            using var reader = cmd.ExecuteReader();
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
 
-            while (reader.Read())
-                albums.Add(MapAlbum(reader));
+                while (reader.Read())
+                    albums.Add(MapAlbum(reader));
 
-            return albums;
+                return albums;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with fetching albums", ex);
+            }
         }
 
         public AlbumDto? GetById(int id)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(@"
-                SELECT a.id, a.Title, a.ReleaseDate, ar.Name AS Artist
-                FROM Album a
-                LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
-                LEFT JOIN Artist ar ON aa.ArtistID = ar.id
-                WHERE a.id = @id", conn);
-
-            cmd.Parameters.AddWithValue("@id", id);
-
-            conn.Open();
-            using var reader = cmd.ExecuteReader();
-
-            if (!reader.Read())
-                return null;
-
-            var albumId = (int)reader["id"];
-            var title = reader["Title"].ToString() ?? "";
-            var releaseDate = reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"];
-            var artist = reader["Artist"].ToString() ?? "";
-            reader.Close();
-
-            var songs = new List<SongDto>();
-            using var songCmd = new SqlCommand(@"
-                SELECT id, album_id, Title, releaseDate, duration
-                FROM Song
-                WHERE album_id = @albumId", conn);
-
-            songCmd.Parameters.AddWithValue("@albumId", albumId);
-            using var songReader = songCmd.ExecuteReader();
-
-            while (songReader.Read())
+            try
             {
-                songs.Add(new SongDto(
-                    id: (int)songReader["id"],
-                    albumId: (int)songReader["album_id"],
-                    title: songReader["Title"].ToString() ?? "",
-                    artist: "",
-                    album: title,
-                    releaseDate: songReader["releaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)songReader["releaseDate"],
-                    duration: songReader["duration"] == DBNull.Value ? TimeSpan.Zero : (TimeSpan)songReader["duration"]
-                ));
-            }
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(@"
+                    SELECT a.id, a.Title, a.ReleaseDate, ar.Name AS Artist
+                    FROM Album a
+                    LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
+                    LEFT JOIN Artist ar ON aa.ArtistID = ar.id
+                    WHERE a.id = @id", conn);
 
-            return new AlbumDto(albumId, title, releaseDate, artist, 0, songs);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+
+                if (!reader.Read())
+                    return null;
+
+                var albumId = (int)reader["id"];
+                var title = reader["Title"].ToString() ?? "";
+                var releaseDate = reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"];
+                var artist = reader["Artist"].ToString() ?? "";
+                reader.Close();
+
+                var songs = new List<SongDto>();
+                using var songCmd = new SqlCommand(@"
+                    SELECT id, album_id, Title, releaseDate, duration
+                    FROM Song
+                    WHERE album_id = @albumId", conn);
+
+                songCmd.Parameters.AddWithValue("@albumId", albumId);
+                using var songReader = songCmd.ExecuteReader();
+
+                while (songReader.Read())
+                {
+                    songs.Add(new SongDto(
+                        id: (int)songReader["id"],
+                        albumId: (int)songReader["album_id"],
+                        title: songReader["Title"].ToString() ?? "",
+                        artist: "",
+                        album: title,
+                        releaseDate: songReader["releaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)songReader["releaseDate"],
+                        duration: songReader["duration"] == DBNull.Value ? TimeSpan.Zero : (TimeSpan)songReader["duration"]
+                    ));
+                }
+
+                return new AlbumDto(albumId, title, releaseDate, artist, 0, songs);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with fetching the album", ex);
+            }
         }
 
         public List<AlbumDto> Search(string query)
         {
-            var albums = new List<AlbumDto>();
+            try
+            {
+                var albums = new List<AlbumDto>();
 
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(@"
-                SELECT a.id, a.Title, a.ReleaseDate, ar.Name AS Artist
-                FROM Album a
-                LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
-                LEFT JOIN Artist ar ON aa.ArtistID = ar.id
-                WHERE a.Title LIKE @query
-                OR SOUNDEX(a.Title) = SOUNDEX(@exactQuery)", conn);
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(@"
+                    SELECT a.id, a.Title, a.ReleaseDate, ar.Name AS Artist
+                    FROM Album a
+                    LEFT JOIN AlbumArtist aa ON a.id = aa.AlbumID
+                    LEFT JOIN Artist ar ON aa.ArtistID = ar.id
+                    WHERE a.Title LIKE @query
+                    OR SOUNDEX(a.Title) = SOUNDEX(@exactQuery)", conn);
 
-            cmd.Parameters.AddWithValue("@query", "%" + query + "%");
-            cmd.Parameters.AddWithValue("@exactQuery", query);
+                cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+                cmd.Parameters.AddWithValue("@exactQuery", query);
 
-            conn.Open();
-            using var reader = cmd.ExecuteReader();
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
 
-            while (reader.Read())
-                albums.Add(MapAlbum(reader));
+                while (reader.Read())
+                    albums.Add(MapAlbum(reader));
 
-            return albums;
+                return albums;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with searching albums", ex);
+            }
         }
 
         public void AddFavorite(int userId, int albumId)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(
-                "INSERT INTO UserAlbum (UserId, AlbumId) VALUES (@userId, @albumId)", conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            cmd.Parameters.AddWithValue("@albumId", albumId);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(
+                    "INSERT INTO UserAlbum (UserId, AlbumId) VALUES (@userId, @albumId)", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@albumId", albumId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with adding to favourites", ex);
+            }
         }
 
         public void RemoveFavorite(int userId, int albumId)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(
-                "DELETE FROM UserAlbum WHERE UserId = @userId AND AlbumId = @albumId", conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            cmd.Parameters.AddWithValue("@albumId", albumId);
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(
+                    "DELETE FROM UserAlbum WHERE UserId = @userId AND AlbumId = @albumId", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@albumId", albumId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with removing from favourites", ex);
+            }
         }
 
         private static AlbumDto MapAlbum(SqlDataReader reader)

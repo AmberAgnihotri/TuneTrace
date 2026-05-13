@@ -1,9 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Discover";
 }
-
 <h2>Discover</h2>
-
 <form method="get" action="/Discover" style="margin-bottom: 20px;">
     <input type="text" name="query" value="@ViewBag.Query" placeholder="Search songs, albums, artists..." />
     <button type="submit" name="filter" value="all">All</button>
@@ -11,74 +9,67 @@
     <button type="submit" name="filter" value="albums">Albums</button>
     <button type="submit" name="filter" value="songs">Songs</button>
 </form>
-
-@if (ViewBag.RecentSearches != null && ViewBag.RecentSearches.Count > 0)
+@if (ViewBag.Error == null)
 {
-    <div style="margin-bottom: 30px;">
-        <h4>Recent Searches</h4>
-        <ul>
-            @foreach (var search in ViewBag.RecentSearches)
-            {
-                <li><a href="/Discover?query=@search">@search</a></li>
-            }
-        </ul>
-    </div>
-}
-
-@if (ViewBag.Error != null)
-{
-    <p style="color: orange;">@ViewBag.Error</p>
-}
-
-@if (ViewBag.Songs != null && ViewBag.Songs.Count > 0)
-{
-    <div style="margin-bottom: 20px;">
-        <h3>Songs</h3>
-        <ul>
-            @foreach (var song in ViewBag.Songs)
-            {
-                <li style="margin-bottom: 5px;">
-                    <a href="/Song/Details/@song.Id">@song.Title</a> — @song.Artist
-                </li>
-            }
-        </ul>
-    </div>
-}
-
-@if (ViewBag.Albums != null && ViewBag.Albums.Count > 0)
-{
-    <div style="margin-bottom: 20px;">
-        <h3>Albums</h3>
-        <ul>
-            @foreach (var album in ViewBag.Albums)
-            {
-                <li style="margin-bottom: 5px;">
-                    <a href="/Album/Details/@album.Id">@album.Title</a> — @album.ArtistName
-                </li>
-            }
-        </ul>
-    </div>
-}
-
-@if (ViewBag.Artists != null && ViewBag.Artists.Count > 0)
-{
-    <div style="margin-bottom: 20px;">
-        <h3>Artists</h3>
-        <ul>
-            @foreach (var artist in ViewBag.Artists)
-            {
-                <li style="margin-bottom: 5px;">
-                    <a href="/Artist/Details/@artist.Id">@artist.Name</a>
-                </li>
-            }
-        </ul>
-    </div>
-}
-
-@if (ViewBag.Query != null && ViewBag.Error == null &&
-     (ViewBag.Songs == null || ViewBag.Songs.Count == 0) &&
-     (ViewBag.Albums == null || ViewBag.Albums.Count == 0) &&
-     (ViewBag.Artists == null || ViewBag.Artists.Count == 0))
-{
-    <p>No results found for "@ViewBag.Query".</p>
+    @if (ViewBag.RecentSearches != null && ViewBag.RecentSearches.Count > 0)
+    {
+        <div style="margin-bottom: 30px;">
+            <h4>Recent Searches</h4>
+            <ul>
+                @foreach (var search in ViewBag.RecentSearches)
+                {
+                    <li><a href="/Discover?query=@search">@search</a></li>
+                }
+            </ul>
+        </div>
+    }
+    @if (ViewBag.Songs != null && ViewBag.Songs.Count > 0)
+    {
+        <div style="margin-bottom: 20px;">
+            <h3>Songs</h3>
+            <ul>
+                @foreach (var song in ViewBag.Songs)
+                {
+                    <li style="margin-bottom: 5px;">
+                        <a href="/Song/Details/@song.Id">@song.Title</a> — @song.Artist
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (ViewBag.Albums != null && ViewBag.Albums.Count > 0)
+    {
+        <div style="margin-bottom: 20px;">
+            <h3>Albums</h3>
+            <ul>
+                @foreach (var album in ViewBag.Albums)
+                {
+                    <li style="margin-bottom: 5px;">
+                        <a href="/Album/Details/@album.Id">@album.Title</a> — @album.ArtistName
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (ViewBag.Artists != null && ViewBag.Artists.Count > 0)
+    {
+        <div style="margin-bottom: 20px;">
+            <h3>Artists</h3>
+            <ul>
+                @foreach (var artist in ViewBag.Artists)
+                {
+                    <li style="margin-bottom: 5px;">
+                        <a href="/Artist/Details/@artist.Id">@artist.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (ViewBag.Query != null &&
+             (ViewBag.Songs == null || ViewBag.Songs.Count == 0) &&
+             (ViewBag.Albums == null || ViewBag.Albums.Count == 0) &&
+             (ViewBag.Artists == null || ViewBag.Artists.Count == 0))
+    {
+        <p>No results found for "@ViewBag.Query".</p>
+    }
 }
