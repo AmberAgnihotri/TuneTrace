@@ -27,7 +27,9 @@ namespace TuneTrace.Controllers
             {
                 ViewBag.Query = query;
                 ViewBag.Filter = filter;
-                ViewBag.RecentSearches = _searchHistoryService.GetRecentSearches(1);
+                ViewBag.RecentSearches = _searchHistoryService.GetRecentSearches(1)
+                    .Select(s => s.SearchTerm)
+                    .ToList();
 
                 if (query == null || query.Length < 2)
                 {

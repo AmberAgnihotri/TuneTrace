@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Interfaces.Interfaces;
+using DAL.DTO;
 
 namespace DAL.Repositories
 {
@@ -31,18 +32,23 @@ namespace DAL.Repositories
             }
         }
 
-        public List<string> GetRecentSearches(int userId)
+        public List<SearchHistoryDTO> GetRecentSearches(int userId)
         {
             try
             {
                 using var conn = new SqlConnection(_connectionString);
                 conn.Open();
-                var cmd = new SqlCommand("SELECT TOP 5 SearchTerm FROM SearchHistory WHERE UserId = @userId ORDER BY SearchDate DESC", conn);
+                var cmd = new SqlCommand("SELECT TOP 5 Id, UserId, SearchTerm, SearchDate FROM SearchHistory WHERE UserId = @userId ORDER BY SearchDate DESC", conn);
                 cmd.Parameters.AddWithValue("@userId", userId);
                 using var reader = cmd.ExecuteReader();
-                var results = new List<string>();
+                var results = new List<SearchHistoryDTO>();
                 while (reader.Read())
-                    results.Add(reader.GetString(0));
+                    results.Add(new SearchHistoryDTO(
+                        id: reader.GetInt32(0),
+                        userId: reader.GetInt32(1),
+                        searchTerm: reader.GetString(2),
+                        searchDate: reader.GetDateTime(3)
+                    ));
                 return results;
             }
             catch (Exception ex)

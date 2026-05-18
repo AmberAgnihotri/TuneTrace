@@ -16,7 +16,7 @@ namespace Unit_Test_1.ServiceTesten
             var result = service.GetRecentSearches(1);
             // Assert
             Assert.HasCount(2, result);
-            Assert.AreEqual("Taylor Swift", result[0]);
+            Assert.AreEqual("Taylor Swift", result[0].SearchTerm);
         }
 
         [TestMethod]
