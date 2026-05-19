@@ -22,11 +22,11 @@ namespace DAL.Repositories
             LEFT JOIN Album a ON s.album_id = a.id
             LEFT JOIN Artist ar ON a.artist_id = ar.id";
 
-        public List<SongDto> GetSongs()
+        public List<SongDTO> GetSongs()
         {
             try
             {
-                var songs = new List<SongDto>();
+                var songs = new List<SongDTO>();
                 using var conn = new SqlConnection(_connectionString);
                 using var cmd = new SqlCommand(BaseQuery, conn);
                 conn.Open();
@@ -41,7 +41,7 @@ namespace DAL.Repositories
             }
         }
 
-        public SongDto? GetSongById(int id)
+        public SongDTO? GetSongById(int id)
         {
             try
             {
@@ -59,11 +59,11 @@ namespace DAL.Repositories
             }
         }
 
-        public List<SongDto> SearchSongs(string query)
+        public List<SongDTO> SearchSongs(string query)
         {
             try
             {
-                var songs = new List<SongDto>();
+                var songs = new List<SongDTO>();
                 using var conn = new SqlConnection(_connectionString);
                 using var cmd = new SqlCommand(BaseQuery + @" WHERE s.Title LIKE @query
                     OR SOUNDEX(s.Title) = SOUNDEX(@exactQuery)", conn);
@@ -155,9 +155,9 @@ namespace DAL.Repositories
             }
         }
 
-        private static SongDto MapSong(SqlDataReader reader)
+        private static SongDTO MapSong(SqlDataReader reader)
         {
-            return new SongDto(
+            return new SongDTO(
                 id: (int)reader["id"],
                 albumId: (int)reader["album_id"],
                 title: reader["Title"].ToString() ?? "",

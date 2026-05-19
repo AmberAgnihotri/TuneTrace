@@ -1,7 +1,5 @@
-﻿using DAL.Repositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using serviceLibary.Services;
-using ServiceLibrary.Services;
 using Unit_Test_1.FakeRepositories;
 
 namespace Unit_Test_1.ServiceTesten
@@ -38,55 +36,80 @@ namespace Unit_Test_1.ServiceTesten
         [TestMethod]
         public void AddFavoriteSong_DoesNotThrow()
         {
-            // Arrange
             var service = new UserService(new FakeUserRepository());
-            // Act & Assert
             service.AddFavoriteSong(1, 1);
         }
 
         [TestMethod]
         public void RemoveFavoriteSong_DoesNotThrow()
         {
-            // Arrange
             var service = new UserService(new FakeUserRepository());
-            // Act & Assert
             service.RemoveFavoriteSong(1, 1);
         }
 
         [TestMethod]
         public void AddFavoriteAlbum_DoesNotThrow()
         {
-            // Arrange
             var service = new UserService(new FakeUserRepository());
-            // Act & Assert
             service.AddFavoriteAlbum(1, 1);
         }
 
         [TestMethod]
         public void RemoveFavoriteAlbum_DoesNotThrow()
         {
-            // Arrange
             var service = new UserService(new FakeUserRepository());
-            // Act & Assert
             service.RemoveFavoriteAlbum(1, 1);
         }
 
         [TestMethod]
         public void AddFavoriteArtist_DoesNotThrow()
         {
-            // Arrange
             var service = new UserService(new FakeUserRepository());
-            // Act & Assert
             service.AddFavoriteArtist(1, 1);
         }
 
         [TestMethod]
         public void RemoveFavoriteArtist_DoesNotThrow()
         {
-            // Arrange
             var service = new UserService(new FakeUserRepository());
-            // Act & Assert
             service.RemoveFavoriteArtist(1, 1);
+        }
+
+        [TestMethod]
+        public void Register_DoesNotThrow()
+        {
+            var service = new UserService(new FakeUserRepository());
+            service.Register("test@test.com", "welkom123", "welkom123");
+        }
+
+        [TestMethod]
+        public void Register_ThrowsException_WhenPasswordTooShort()
+        {
+            var service = new UserService(new FakeUserRepository());
+            try
+            {
+                service.Register("test@test.com", "kort", "kort");
+                Assert.Fail("Expected exception was not thrown.");
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Password must be at least 8 characters long.", ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void Register_ThrowsException_WhenPasswordsDoNotMatch()
+        {
+            var service = new UserService(new FakeUserRepository());
+            try
+            {
+                service.Register("test@test.com", "welkom123", "anders123");
+                Assert.Fail("Expected exception was not thrown.");
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Passwords do not match.", ex.Message);
+            }
         }
     }
 }

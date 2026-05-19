@@ -11,17 +11,19 @@ namespace Unit_Test_1.ModelTesten
         {
             // Arrange
             var id = 1;
-            var account = "amber";
+            var email = "test@test.com";
+            var password = "welkom123";
             var favoriteSongIds = new List<int> { 1, 2 };
             var favoriteAlbumIds = new List<int> { 1 };
             var favoriteArtistIds = new List<int> { 1 };
 
             // Act
-            var user = new UserModel(id, account, favoriteSongIds, favoriteAlbumIds, favoriteArtistIds);
+            var user = new UserModel(id, email, password, favoriteSongIds, favoriteAlbumIds, favoriteArtistIds);
 
             // Assert
             Assert.AreEqual(id, user.Id);
-            Assert.AreEqual(account, user.Account);
+            Assert.AreEqual(email, user.Email);
+            Assert.AreEqual(password, user.Password);
             Assert.IsNotNull(user.FavoriteSongIds);
             Assert.IsNotNull(user.FavoriteAlbumIds);
             Assert.IsNotNull(user.FavoriteArtistIds);

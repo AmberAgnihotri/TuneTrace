@@ -6,10 +6,10 @@ namespace DAL.DTO
         public int Id { get; }
         public string Name { get; }
         public string Biography { get; }
-        public List<AlbumDto> Albums { get; }
-        public List<SongDto> Songs { get; }
+        public List<AlbumDTO> Albums { get; }
+        public List<SongDTO> Songs { get; }
 
-        public ArtistDTO(int id, string name, string biography, List<AlbumDto> albums, List<SongDto> songs)
+        public ArtistDTO(int id, string name, string biography, List<AlbumDTO> albums, List<SongDTO> songs)
         {
             Id = id;
             Name = name;

@@ -15,11 +15,11 @@ namespace DAL.Repositories
                                 ?? string.Empty;
         }
 
-        public List<AlbumDto> GetAll()
+        public List<AlbumDTO> GetAll()
         {
             try
             {
-                var albums = new List<AlbumDto>();
+                var albums = new List<AlbumDTO>();
 
                 using var conn = new SqlConnection(_connectionString);
                 using var cmd = new SqlCommand(@"
@@ -42,7 +42,7 @@ namespace DAL.Repositories
             }
         }
 
-        public AlbumDto? GetById(int id)
+        public AlbumDTO? GetById(int id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace DAL.Repositories
                 var artist = reader["Artist"].ToString() ?? "";
                 reader.Close();
 
-                var songs = new List<SongDto>();
+                var songs = new List<SongDTO>();
                 using var songCmd = new SqlCommand(@"
                     SELECT id, album_id, Title, releaseDate, duration
                     FROM Song
@@ -79,7 +79,7 @@ namespace DAL.Repositories
 
                 while (songReader.Read())
                 {
-                    songs.Add(new SongDto(
+                    songs.Add(new SongDTO(
                         id: (int)songReader["id"],
                         albumId: (int)songReader["album_id"],
                         title: songReader["Title"].ToString() ?? "",
@@ -90,7 +90,7 @@ namespace DAL.Repositories
                     ));
                 }
 
-                return new AlbumDto(albumId, title, releaseDate, artist, 0, songs);
+                return new AlbumDTO(albumId, title, releaseDate, artist, 0, songs);
             }
             catch (Exception ex)
             {
@@ -98,11 +98,11 @@ namespace DAL.Repositories
             }
         }
 
-        public List<AlbumDto> Search(string query)
+        public List<AlbumDTO> Search(string query)
         {
             try
             {
-                var albums = new List<AlbumDto>();
+                var albums = new List<AlbumDTO>();
 
                 using var conn = new SqlConnection(_connectionString);
                 using var cmd = new SqlCommand(@"
@@ -166,15 +166,15 @@ namespace DAL.Repositories
             }
         }
 
-        private static AlbumDto MapAlbum(SqlDataReader reader)
+        private static AlbumDTO MapAlbum(SqlDataReader reader)
         {
-            return new AlbumDto(
+            return new AlbumDTO(
                 id: (int)reader["id"],
                 title: reader["Title"].ToString() ?? "",
                 releaseDate: reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"],
                 artist: reader["Artist"].ToString() ?? "",
                 artistId: 0,
-                songs: new List<SongDto>()
+                songs: new List<SongDTO>()
             );
         }
     }

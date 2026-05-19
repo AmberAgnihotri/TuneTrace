@@ -1,9 +1,7 @@
-﻿
-using DAL.Repositories;
+﻿using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using serviceLibary.Services;
 using ServiceLibrary.Services;
-using TuneTrace.ViewModels;
 
 namespace TuneTrace.Controllers
 {
@@ -163,6 +161,31 @@ namespace TuneTrace.Controllers
             {
                 ViewBag.Error = "Something went wrong while removing the artist from favourites.";
                 return View("FavouriteArtists");
+            }
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Register(string email, string password, string confirmPassword)
+        {
+            try
+            {
+                _userService.Register(email, password, confirmPassword);
+
+                ViewBag.Success = "Your account has been created successfully. You can now log in.";
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
             }
         }
     }

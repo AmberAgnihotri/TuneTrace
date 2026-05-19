@@ -41,7 +41,7 @@ namespace serviceLibary.Services
             _repository.RemoveFavorite(userId, albumId);
         }
 
-        private AlbumModel MapAlbum(AlbumDto dto)
+        private AlbumModel MapAlbum(AlbumDTO dto)
         {
             return new AlbumModel(
                 id: dto.Id,

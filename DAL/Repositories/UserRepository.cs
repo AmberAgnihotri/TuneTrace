@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using DAL.DTO;
 using Interfaces.Interfaces;
@@ -54,18 +53,12 @@ namespace DAL.Repositories
                         favoriteArtists.Add((int)artistReader["ArtistId"]);
                 }
 
-                return new UserDTO(userId, string.Empty, favoriteSongs, favoriteAlbums, favoriteArtists);
+                return new UserDTO(userId, string.Empty, string.Empty, favoriteSongs, favoriteAlbums, favoriteArtists);
             }
             catch (Exception ex)
             {
                 throw new Exception("Something went wrong while retrieving the favorites.", ex);
             }
-        }
-
-        public bool SaveFavoriteSong(int userId, int songId)
-        {
-            try { AddFavoriteSong(userId, songId); return true; }
-            catch { return false; }
         }
 
         public void AddFavoriteSong(int userId, int songId)
@@ -167,6 +160,30 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 throw new Exception("Something went wrong while removing the artist from favorites.", ex);
+            }
+        }
+
+        public void Register(string email, string password)
+        {
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                conn.Open();
+
+                var checkCmd = new SqlCommand("SELECT COUNT(*) FROM Users WHERE Email = @email", conn);
+                checkCmd.Parameters.AddWithValue("@email", email);
+                int count = (int)checkCmd.ExecuteScalar();
+                if (count > 0)
+                    throw new Exception("Email is already in use.");
+
+                var cmd = new SqlCommand("INSERT INTO Users (Email, Wachtwoord) VALUES (@email, @password)", conn);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@password", password);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while registering.", ex);
             }
         }
     }

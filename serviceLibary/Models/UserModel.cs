@@ -3,7 +3,8 @@
     public class UserModel
     {
         public int Id { get; }
-        public string Account { get; }
+        public string Email { get; }
+        public string Password { get; }
         private List<int> favoriteSongIds;
         public IReadOnlyList<int> FavoriteSongIds { get { return favoriteSongIds.AsReadOnly(); } }
         private List<int> favoriteAlbumIds;
@@ -13,13 +14,15 @@
 
         public UserModel(
             int id,
-            string account,
+            string email,
+            string password,
             List<int> favoriteSongIds,
             List<int> favoriteAlbumIds,
             List<int> favoriteArtistIds)
         {
             Id = id;
-            Account = account;
+            Email = email;
+            Password = password;
             this.favoriteSongIds = favoriteSongIds;
             this.favoriteAlbumIds = favoriteAlbumIds;
             this.favoriteArtistIds = favoriteArtistIds;

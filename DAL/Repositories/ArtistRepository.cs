@@ -54,7 +54,7 @@ namespace DAL.Repositories
                 var biography = reader["Biography"] == DBNull.Value ? "" : reader["Biography"].ToString() ?? "";
                 reader.Close();
 
-                var albums = new List<AlbumDto>();
+                var albums = new List<AlbumDTO>();
                 using (var albumConn = new SqlConnection(_connectionString))
                 {
                     albumConn.Open();
@@ -67,18 +67,18 @@ namespace DAL.Repositories
                     using var albumReader = albumCmd.ExecuteReader();
                     while (albumReader.Read())
                     {
-                        albums.Add(new AlbumDto(
+                        albums.Add(new AlbumDTO(
                             id: (int)albumReader["id"],
                             title: albumReader["Title"].ToString() ?? "",
                             releaseDate: albumReader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)albumReader["ReleaseDate"],
                             artist: name,
                             artistId: artistId,
-                            songs: new List<SongDto>()
+                            songs: new List<SongDTO>()
                         ));
                     }
                 }
 
-                var songs = new List<SongDto>();
+                var songs = new List<SongDTO>();
                 using (var songConn = new SqlConnection(_connectionString))
                 {
                     songConn.Open();
@@ -92,7 +92,7 @@ namespace DAL.Repositories
                     using var songReader = songCmd.ExecuteReader();
                     while (songReader.Read())
                     {
-                        songs.Add(new SongDto(
+                        songs.Add(new SongDTO(
                             id: (int)songReader["id"],
                             albumId: 0,
                             title: songReader["Title"].ToString() ?? "",
@@ -176,8 +176,8 @@ namespace DAL.Repositories
                 id: (int)reader["id"],
                 name: reader["Name"].ToString() ?? "",
                 biography: reader["Biography"] == DBNull.Value ? "" : reader["Biography"].ToString() ?? "",
-                albums: new List<AlbumDto>(),
-                songs: new List<SongDto>()
+                albums: new List<AlbumDTO>(),
+                songs: new List<SongDTO>()
             );
         }
     }

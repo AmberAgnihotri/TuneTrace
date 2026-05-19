@@ -4,10 +4,10 @@ namespace Interfaces.Interfaces
 {
     public interface ISongRepository
     {
-        List<SongDto> GetSongs();
-        SongDto? GetSongById(int id);
+        List<SongDTO> GetSongs();
+        SongDTO? GetSongById(int id);
 
-        List<SongDto> SearchSongs(string query);
+        List<SongDTO> SearchSongs(string query);
 
         void AddFavorite(int userId, int songId);
         void RemoveFavorite(int userId, int songId);

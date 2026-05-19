@@ -1,3 +1,4 @@
+using DAL.DTO;
 using Interfaces.Interfaces;
 using ServiceLibrary.Models;
 
@@ -28,44 +29,17 @@ namespace ServiceLibrary.Services
 
         public List<ReviewModel> GetReviewsBySong(int songId)
         {
-            return _repository.GetReviewsBySong(songId).Select(r => new ReviewModel(
-                id: r.Id,
-                userId: r.UserId,
-                songId: r.SongId,
-                albumId: r.AlbumId,
-                rating: r.Rating,
-                reviewText: r.ReviewText,
-                songTitle: "",
-                albumTitle: ""
-            )).ToList();
+            return _repository.GetReviewsBySong(songId).Select(MapReview).ToList();
         }
 
         public List<ReviewModel> GetReviewsByAlbum(int albumId)
         {
-            return _repository.GetReviewsByAlbum(albumId).Select(r => new ReviewModel(
-                id: r.Id,
-                userId: r.UserId,
-                songId: r.SongId,
-                albumId: r.AlbumId,
-                rating: r.Rating,
-                reviewText: r.ReviewText,
-                songTitle: "",
-                albumTitle: ""
-            )).ToList();
+            return _repository.GetReviewsByAlbum(albumId).Select(MapReview).ToList();
         }
 
         public List<ReviewModel> GetAllReviews()
         {
-            return _repository.GetAllReviews().Select(r => new ReviewModel(
-                id: r.Id,
-                userId: r.UserId,
-                songId: r.SongId,
-                albumId: r.AlbumId,
-                rating: r.Rating,
-                reviewText: r.ReviewText,
-                songTitle: r.SongTitle,
-                albumTitle: r.AlbumTitle
-            )).ToList();
+            return _repository.GetAllReviews().Select(MapReview).ToList();
         }
 
         public bool HasSongReview(int userId, int songId)
@@ -76,6 +50,20 @@ namespace ServiceLibrary.Services
         public bool HasAlbumReview(int userId, int albumId)
         {
             return _repository.HasAlbumReview(userId, albumId);
+        }
+
+        private ReviewModel MapReview(ReviewDTO dto)
+        {
+            return new ReviewModel(
+                id: dto.Id,
+                userId: dto.UserId,
+                songId: dto.SongId,
+                albumId: dto.AlbumId,
+                rating: dto.Rating,
+                reviewText: dto.ReviewText,
+                songTitle: dto.SongTitle ?? "",
+                albumTitle: dto.AlbumTitle ?? ""
+            );
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace DAL.DTO
+﻿
+
+namespace DAL.DTO
 {
-    public class SongDto
+    public class SongDTO
     {
         public int Id { get; }
         public int AlbumId { get; }
@@ -10,7 +12,7 @@
         public DateTime ReleaseDate { get; }
         public TimeSpan Duration { get; }
 
-        public SongDto(int id, int albumId, string title, string artist, string album, DateTime releaseDate, TimeSpan duration)
+        public SongDTO(int id, int albumId, string title, string artist, string album, DateTime releaseDate, TimeSpan duration)
         {
             Id = id;
             AlbumId = albumId;
