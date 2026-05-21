@@ -8,10 +8,12 @@ namespace TuneTrace.Controllers
     public class SongController : Controller
     {
         private readonly SongService _service;
+        private readonly ReviewService _reviewService;
 
         public SongController(IConfiguration configuration)
         {
             _service = new SongService(new SongRepository(configuration));
+            _reviewService = new ReviewService(new ReviewRepository(configuration));
         }
 
         public IActionResult Index()
@@ -53,7 +55,19 @@ namespace TuneTrace.Controllers
                     ReleaseDate = song.ReleaseDate,
                     Duration = song.Duration
                 };
+
+                var reviews = _reviewService.GetReviewsBySong(id).Select(r => new ReviewViewModel
+                {
+                    Id = r.Id,
+                    UserId = r.UserId,
+                    Rating = r.Rating,
+                    ReviewText = r.ReviewText,
+                    SongTitle = r.SongTitle,
+                    SongId = r.SongId
+                }).ToList();
+
                 ViewBag.Song = viewModel;
+                ViewBag.Reviews = reviews;
                 return View();
             }
             catch (Exception)
@@ -72,7 +86,6 @@ namespace TuneTrace.Controllers
                     ViewBag.Error = "Search query must be at least 2 characters.";
                     return View();
                 }
-
                 var songs = _service.SearchSongs(query).Select(s => new SongViewModel
                 {
                     Id = s.Id,
