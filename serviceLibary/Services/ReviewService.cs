@@ -52,6 +52,11 @@ namespace ServiceLibrary.Services
             return _repository.HasAlbumReview(userId, albumId);
         }
 
+        public List<ReviewModel> GetReviewsByUser(int userId)
+        {
+            return _repository.GetReviewsByUser(userId).Select(MapReview).ToList();
+        }
+
         private ReviewModel MapReview(ReviewDTO dto)
         {
             return new ReviewModel(

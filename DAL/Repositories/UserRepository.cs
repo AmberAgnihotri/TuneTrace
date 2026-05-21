@@ -61,6 +61,33 @@ namespace DAL.Repositories
             }
         }
 
+        public UserDTO? Login(string email, string password)
+        {
+            try
+            {
+                using var conn = new SqlConnection(_connectionString);
+                conn.Open();
+                var cmd = new SqlCommand("SELECT Id, Email FROM Users WHERE Email = @email AND Wachtwoord = @password", conn);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@password", password);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    return new UserDTO(
+                        id: reader.GetInt32(0),
+                        email: reader.GetString(1),
+                        password: string.Empty,
+                        favoriteSongs: new List<int>(),
+                        favoriteAlbums: new List<int>(),
+                        favoriteArtists: new List<int>()
+                    );
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while logging in.", ex);
+            }
+        }
+
         public void AddFavoriteSong(int userId, int songId)
         {
             try

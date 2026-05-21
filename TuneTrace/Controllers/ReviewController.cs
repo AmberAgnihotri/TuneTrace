@@ -1,4 +1,3 @@
-
 using DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using serviceLibary.Services;
@@ -22,11 +21,15 @@ namespace TuneTrace.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                return RedirectToAction("Login", "User");
+
             try
             {
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
                 ViewBag.Songs = _songService.GetSongs();
                 ViewBag.Albums = _albumService.GetAll();
-                ViewBag.Reviews = _reviewService.GetAllReviews();
+                ViewBag.Reviews = _reviewService.GetReviewsByUser(userId);
                 return View();
             }
             catch (Exception)
@@ -39,19 +42,23 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult AddReview(ReviewViewModel vm)
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                return RedirectToAction("Login", "User");
+
             try
             {
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
                 ViewBag.Songs = _songService.GetSongs();
                 ViewBag.Albums = _albumService.GetAll();
-                ViewBag.Reviews = _reviewService.GetAllReviews();
+                ViewBag.Reviews = _reviewService.GetReviewsByUser(userId);
 
-                if (vm.SongId > 0 && _reviewService.HasSongReview(vm.UserId, vm.SongId))
+                if (vm.SongId > 0 && _reviewService.HasSongReview(userId, vm.SongId))
                 {
                     ViewBag.Error = "You already have a review for this song. Please delete your current review before placing a new one.";
                     return View("Index", vm);
                 }
 
-                if (vm.AlbumId > 0 && _reviewService.HasAlbumReview(vm.UserId, vm.AlbumId))
+                if (vm.AlbumId > 0 && _reviewService.HasAlbumReview(userId, vm.AlbumId))
                 {
                     ViewBag.Error = "You already have a review for this album. Please delete your current review before placing a new one.";
                     return View("Index", vm);
@@ -64,9 +71,9 @@ namespace TuneTrace.Controllers
                 }
 
                 if (vm.SongId > 0)
-                    _reviewService.AddReview(vm.UserId, vm.SongId, vm.ReviewText, vm.Rating);
+                    _reviewService.AddReview(userId, vm.SongId, vm.ReviewText, vm.Rating);
                 else if (vm.AlbumId > 0)
-                    _reviewService.AddAlbumReview(vm.UserId, vm.AlbumId, vm.ReviewText, vm.Rating);
+                    _reviewService.AddAlbumReview(userId, vm.AlbumId, vm.ReviewText, vm.Rating);
 
                 return RedirectToAction("Index");
             }

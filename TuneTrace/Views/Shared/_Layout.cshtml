@@ -20,6 +20,11 @@
         <a asp-controller="User" asp-action="FavouriteArtists">Artists</a>
         <a asp-controller="User" asp-action="FavouriteAlbums">Albums</a>
         <a asp-controller="User" asp-action="FavouriteSongs">Songs</a>
+        @if (Context.Session.GetInt32("UserId") != null)
+        {
+            <br />
+            <a asp-controller="User" asp-action="Logout">Log Out</a>
+        }
     </div>
     <div class="main-content">
         @if (ViewBag.Error != null)

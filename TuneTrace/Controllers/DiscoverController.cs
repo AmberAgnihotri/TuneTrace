@@ -25,11 +25,15 @@ namespace TuneTrace.Controllers
         {
             try
             {
+                int? userId = HttpContext.Session.GetInt32("UserId");
+
                 ViewBag.Query = query;
                 ViewBag.Filter = filter;
-                ViewBag.RecentSearches = _searchHistoryService.GetRecentSearches(1)
-                    .Select(s => s.SearchTerm)
-                    .ToList();
+
+                if (userId != null)
+                    ViewBag.RecentSearches = _searchHistoryService.GetRecentSearches(userId.Value)
+                        .Select(s => s.SearchTerm)
+                        .ToList();
 
                 if (query == null || query.Length < 2)
                 {
@@ -38,7 +42,8 @@ namespace TuneTrace.Controllers
                     return View();
                 }
 
-                _searchHistoryService.SaveSearch(1, query);
+                if (userId != null)
+                    _searchHistoryService.SaveSearch(userId.Value, query);
 
                 if (filter == "all" || filter == "songs")
                     ViewBag.Songs = _songService.SearchSongs(query).Select(s => new SongViewModel

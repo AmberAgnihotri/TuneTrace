@@ -129,6 +129,42 @@ namespace DAL.Repositories
             }
         }
 
+        public List<ReviewDTO> GetReviewsByUser(int userId)
+        {
+            try
+            {
+                var reviews = new List<ReviewDTO>();
+                using var conn = new SqlConnection(_connectionString);
+                using var cmd = new SqlCommand(@"
+                    SELECT r.*, s.Title AS SongTitle, a.Title AS AlbumTitle
+                    FROM Review r
+                    LEFT JOIN Song s ON r.SongId = s.id
+                    LEFT JOIN Album a ON r.AlbumId = a.id
+                    WHERE r.UserId = @userId", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    reviews.Add(new ReviewDTO(
+                        id: (int)reader["Id"],
+                        userId: (int)reader["UserId"],
+                        albumId: reader["AlbumId"] == DBNull.Value ? 0 : (int)reader["AlbumId"],
+                        songId: reader["SongId"] == DBNull.Value ? 0 : (int)reader["SongId"],
+                        rating: (int)reader["Rating"],
+                        reviewText: reader["ReviewText"] == DBNull.Value ? string.Empty : reader["ReviewText"].ToString()!,
+                        songTitle: reader["SongTitle"] == DBNull.Value ? string.Empty : reader["SongTitle"].ToString()!,
+                        albumTitle: reader["AlbumTitle"] == DBNull.Value ? string.Empty : reader["AlbumTitle"].ToString()!
+                    ));
+                }
+                return reviews;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong while retrieving the reviews for this user.", ex);
+            }
+        }
+
         public bool HasSongReview(int userId, int songId)
         {
             try

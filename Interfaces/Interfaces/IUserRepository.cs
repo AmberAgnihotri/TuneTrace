@@ -5,6 +5,7 @@ namespace Interfaces.Interfaces
     public interface IUserRepository
     {
         UserDTO? GetFavorites(int userId);
+        UserDTO? Login(string email, string password);
         void AddFavoriteSong(int userId, int songId);
         void AddFavoriteAlbum(int userId, int albumId);
         void AddFavoriteArtist(int userId, int artistId);

@@ -13,13 +13,6 @@ namespace serviceLibary.Services
             _repository = repository;
         }
 
-        public UserModel? GetFavorites(int userId)
-        {
-            var dto = _repository.GetFavorites(userId);
-            if (dto == null) return null;
-            return MapUser(dto);
-        }
-
         public void AddFavoriteSong(int userId, int songId)
             => _repository.AddFavoriteSong(userId, songId);
 
@@ -47,6 +40,19 @@ namespace serviceLibary.Services
             _repository.Register(email, password);
         }
 
+        public UserModel? GetFavorites(int userId)
+        {
+            var dto = _repository.GetFavorites(userId);
+            if (dto == null) return null;
+            return MapUser(dto);
+        }
+
+        public UserModel? Login(string email, string password)
+        {
+            var dto = _repository.Login(email, password);
+            if (dto == null) return null;
+            return MapUser(dto);
+        }
         private UserModel MapUser(UserDTO dto)
         {
             return new UserModel(

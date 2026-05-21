@@ -121,5 +121,17 @@ namespace Unit_Test_1.ServiceTesten
             // Assert
             Assert.IsTrue(result);
         }
+
+        [TestMethod]
+        public void GetReviewsByUser_ReturnsReviews()
+        {
+            // Arrange
+            var service = new ReviewService(new FakeReviewRepository());
+            // Act
+            var result = service.GetReviewsByUser(1);
+            // Assert
+            Assert.HasCount(2, result);
+            Assert.AreEqual(1, result[0].UserId);
+        }
     }
 }

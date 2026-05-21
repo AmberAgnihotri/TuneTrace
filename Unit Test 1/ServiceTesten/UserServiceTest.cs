@@ -111,5 +111,24 @@ namespace Unit_Test_1.ServiceTesten
                 Assert.AreEqual("Passwords do not match.", ex.Message);
             }
         }
+
+        [TestMethod]
+        public void Login_ReturnsUser_WhenCredentialsAreCorrect()
+        {
+            var service = new UserService(new FakeUserRepository());
+            var result = service.Login("test@test.com", "welkom123");
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Id);
+            Assert.AreEqual("test@test.com", result.Email);
+        }
+
+        [TestMethod]
+        public void Login_ReturnsNull_WhenCredentialsAreIncorrect()
+        {
+            var service = new UserService(new FakeUserRepository());
+            var result = service.Login("test@test.com", "wrongpassword");
+            Assert.IsNull(result);
+        }
     }
 }
+

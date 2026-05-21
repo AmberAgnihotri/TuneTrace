@@ -20,11 +20,75 @@ namespace TuneTrace.Controllers
             _artistService = new ArtistService(new ArtistRepository(configuration));
         }
 
-        public IActionResult FavouriteSongs()
+        private IActionResult RedirectToLoginIfNotLoggedIn()
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                return RedirectToAction("Login");
+            return null!;
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string email, string password)
         {
             try
             {
-                var favorites = _userService.GetFavorites(1);
+                var user = _userService.Login(email, password);
+                if (user == null)
+                {
+                    ViewBag.Error = "Invalid email or password.";
+                    return View();
+                }
+                HttpContext.Session.SetInt32("UserId", user.Id);
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(string email, string password, string confirmPassword)
+        {
+            try
+            {
+                _userService.Register(email, password, confirmPassword);
+                ViewBag.Success = "Your account has been created successfully. You can now log in.";
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        public IActionResult FavouriteSongs()
+        {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
+            try
+            {
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                var favorites = _userService.GetFavorites(userId);
                 var songs = _songService.GetSongs()
                     .Where(s => favorites!.FavoriteSongIds.Contains(s.Id))
                     .ToList();
@@ -40,9 +104,13 @@ namespace TuneTrace.Controllers
 
         public IActionResult FavouriteAlbums()
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                var favorites = _userService.GetFavorites(1);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                var favorites = _userService.GetFavorites(userId);
                 var albums = _albumService.GetAll()
                     .Where(a => favorites!.FavoriteAlbumIds.Contains(a.Id))
                     .ToList();
@@ -58,9 +126,13 @@ namespace TuneTrace.Controllers
 
         public IActionResult FavouriteArtists()
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                var favorites = _userService.GetFavorites(1);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                var favorites = _userService.GetFavorites(userId);
                 var artists = _artistService.GetArtists()
                     .Where(a => favorites!.FavoriteArtistIds.Contains(a.Id))
                     .ToList();
@@ -77,9 +149,13 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult AddFavouriteSong(int songId)
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                _userService.AddFavoriteSong(1, songId);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                _userService.AddFavoriteSong(userId, songId);
                 return RedirectToAction("FavouriteSongs");
             }
             catch (Exception)
@@ -92,9 +168,13 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult RemoveFavouriteSong(int songId)
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                _userService.RemoveFavoriteSong(1, songId);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                _userService.RemoveFavoriteSong(userId, songId);
                 return RedirectToAction("FavouriteSongs");
             }
             catch (Exception)
@@ -107,9 +187,13 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult AddFavouriteAlbum(int albumId)
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                _userService.AddFavoriteAlbum(1, albumId);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                _userService.AddFavoriteAlbum(userId, albumId);
                 return RedirectToAction("FavouriteAlbums");
             }
             catch (Exception)
@@ -122,9 +206,13 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult RemoveFavouriteAlbum(int albumId)
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                _userService.RemoveFavoriteAlbum(1, albumId);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                _userService.RemoveFavoriteAlbum(userId, albumId);
                 return RedirectToAction("FavouriteAlbums");
             }
             catch (Exception)
@@ -137,9 +225,13 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult AddFavouriteArtist(int artistId)
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                _userService.AddFavoriteArtist(1, artistId);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                _userService.AddFavoriteArtist(userId, artistId);
                 return RedirectToAction("FavouriteArtists");
             }
             catch (Exception)
@@ -152,40 +244,19 @@ namespace TuneTrace.Controllers
         [HttpPost]
         public IActionResult RemoveFavouriteArtist(int artistId)
         {
+            var redirect = RedirectToLoginIfNotLoggedIn();
+            if (redirect != null) return redirect;
+
             try
             {
-                _userService.RemoveFavoriteArtist(1, artistId);
+                int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+                _userService.RemoveFavoriteArtist(userId, artistId);
                 return RedirectToAction("FavouriteArtists");
             }
             catch (Exception)
             {
                 ViewBag.Error = "Something went wrong while removing the artist from favourites.";
                 return View("FavouriteArtists");
-            }
-        }
-
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-
-
-        [HttpPost]
-        public IActionResult Register(string email, string password, string confirmPassword)
-        {
-            try
-            {
-                _userService.Register(email, password, confirmPassword);
-
-                ViewBag.Success = "Your account has been created successfully. You can now log in.";
-
-                return View();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                return View();
             }
         }
     }
