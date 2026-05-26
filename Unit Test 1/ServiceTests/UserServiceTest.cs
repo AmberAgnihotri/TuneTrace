@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using serviceLibary.Services;
+﻿using serviceLibary.Services;
 using Unit_Test_1.FakeRepositories;
 
 namespace Unit_Test_1.ServiceTesten

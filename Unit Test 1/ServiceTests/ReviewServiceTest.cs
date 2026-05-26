@@ -1,7 +1,5 @@
-﻿using DAL.Repositories;
-using ServiceLibrary.Services;
+﻿using ServiceLibrary.Services;
 using Unit_Test_1.FakeRepositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Unit_Test_1.ServiceTesten
 {
