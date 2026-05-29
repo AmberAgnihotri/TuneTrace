@@ -36,7 +36,7 @@ namespace serviceLibary.Services
             _repository.AddFavorite(userId, albumId);
         }
 
-        public void RemoveFavorite(int userId, int albumId)
+        public void RemoveFavorite(int userId, int albumId) 
         {
             _repository.RemoveFavorite(userId, albumId);
         }
